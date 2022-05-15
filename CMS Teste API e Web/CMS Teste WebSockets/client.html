@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS WebSocker Client</title>
+</head>
+<body>
+
+    <button onclick="contactServer();">Click Here</button>
+
+    <div class="board"></div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-simple-websocket@1.1.4/dist/jquery.simple.websocket.min.js"></script>
+    <script>
+
+        // const socket = new WebSocket('ws://localhost:8765/', '');
+        // socket.addEventListener('open', function (event) {
+        //     socket.send('Connection Established');
+        // });
+        // socket.addEventListener('message', function (event) {
+        //     console.log(event.data);
+        // });
+
+        var socket = $.simpleWebSocket({ url: 'ws://127.0.0.1:8765/' });
+
+        socket.listen(function(message) {
+            console.log('message1');
+            console.log(message);
+            console.log(message.text);
+        });
+
+        socket.listen(function(data) {
+            console.log('message2');
+          console.log(data);
+        });
+
+        socket.onmessage = function (event) {
+            console.log('message3');
+          console.log(event.data);
+        }
+
+        const contactServer = () => {
+            // socket.send("Initialize");
+            socket.send({ 'text': 'hello' }).done(function() {
+                // console.log('ok');
+            }).fail(function(e) {
+                 console.log(e);
+            });
+        }
+
+
+    </script>
+</body>
+</html>

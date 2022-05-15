@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/locales-all.min.js'></script>
+  </head>
+  <body>
+
+
+    <!-- https://fullcalendar.io/docs#toc -->
+
+    <div id='calendar'></div>
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+
+          initialView: 'dayGridMonth',
+
+          headerToolbar: { center: 'dayGridMonth,timeGridWeek' }, // buttons for switching between views
+
+
+          views: {
+            // dayGridMonth: { // name of view
+            //   titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit', }, // other view-specific options here
+            //  },
+
+            // dayGridMonth: {
+            //   dayMaxEventRows: 6, // adjust to 6 only for timeGridWeek/timeGridDay
+            // },
+
+          },
+
+          dateClick: function(info) {
+            console.log('01 clicked on ' + info.dateStr);
+            // alert('01 a day has been clicked!');
+          },
+
+
+          navLinks: false,
+
+          navLinkWeekClick: function(weekStart, jsEvent) {
+            console.log('week start', weekStart.toISOString());
+            console.log('coords', jsEvent.pageX, jsEvent.pageY);
+          },
+
+          timeZone: 'UTC',
+          dayMaxEvents: true, // allow "more" link when too many events
+          //dayMaxEventRows: true, 
+
+
+          events: [
+            {
+              title: 'My Event',
+              start: '2022-05-12',
+              url: 'http://google.com/'
+            }
+            // other events here
+          ],
+          eventClick: function(info) {
+            info.jsEvent.preventDefault(); // don't let the browser navigate
+            alert('Event: ' + info.event.title, ' - Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY, ' - View: ' + info.view.type);
+            info.el.style.borderColor = 'red';
+            if (info.event.url) {
+              window.open(info.event.url);
+            }
+          },
+
+
+        });
+
+        calendar.render();
+
+        calendar.setOption('locale', 'pt-br');
+
+        calendar.on('dateClick', function(info) {
+          console.log('02 clicked on ' + info.dateStr);
+          // alert('02 a day has been clicked!');
+        });
+
+        //calendar.next();
+        calendar.today();
+
+        calendar.batchRendering(function() {
+          calendar.changeView('dayGridMonth'); // timeGridWeek
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+          calendar.addEvent({ title: 'new event', start: '2022-05-13' });
+
+        });
+
+      });
+
+
+
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{% macro blog(title, author, text, date) %}
+<div class="blog">
+    <h1 class="blog-title">{{title}}</h1>
+    <h3 class="blog-author">By: {{author}}</h3>
+    <p class="blog-text">{{text}}</p>
+    <small class="blog-date">Published On: {{date}}</small>
+    <hr>
+</div>
+{% endmacro %}

@@ -1,0 +1,3 @@
+from src.repositories.UserRepository import UserRepository
+from src.repositories.PostRepository import PostRepository
+from src.repositories.ContactRepository import ContactRepository

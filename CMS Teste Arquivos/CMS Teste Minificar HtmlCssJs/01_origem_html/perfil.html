@@ -1,0 +1,1568 @@
+{% extends 'base.html' %}
+
+{% block subtitulo %} - Perfil {% endblock %}
+
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="{{ static_autoversion('pages/css/PagPerfil.css') }}" />
+{% endblock %}
+
+{% block content %}
+
+	<!-- Div Main Content -->
+	<section class="content">F
+		<div class="container">
+
+			<!-- Div Titulo Pag -->
+			<div class="row clearfix">
+				<div class="col-lg-12">
+					<div class="card border">
+						<div class="body block-header">
+							<div class="row">
+								<div class="col-lg-6 col-md-8 col-sm-12">
+									<h2>Perfil</h2>
+									<ul class="breadcrumb p-l-0 p-b-0 ">
+										<li class="breadcrumb-item"><a href="{{ url_for('principal.index') }}"><i class="icon-home"></i></a></li>
+										<li class="breadcrumb-item active">Minha Conta</li>
+									</ul>
+								</div>
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 text-right" style="border: 0px solid blue; ">
+									<a href="https://apoia.se/tamonabolsa" target="_blank"><img width="120" height="45" src="{{ url_for('static', filename='pages/img/apoia_se_02.jpg') }}" alt="IconeDoar"  /> </a>
+									<a href="javascript:void(0);" data-toggle="modal" data-target="#PopModalDoacao"><img width="120" height="50" src="{{ url_for('static', filename='pages/img/BtnDoacao02.png') }}" alt="IconeDoar"  /> </a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Div Titulo Pag -->
+
+			<!-- Div Conteudo Pag -->
+			<div class="row clearfix">
+				<div class="col-lg-12">
+					<div class="card border">
+						<!-- <div class="header">
+							<h2><strong>Minha</strong> Conta</h2>
+						</div> -->
+						<div class="body">
+
+							<!-- Div Row clearfix -->
+							<div class="row clearfix">
+
+								<!-- Div col 3-->
+								<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+									<!-- Nav Tabs -->
+									<ul class="nav nav-tabs flex-column text-center pull-center " style="width:300px;  border: 0px solid red;" id="v-pills-tab" aria-orientation="vertical">
+										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link active" id="v-pills-Dados-tab"   data-toggle="tab" aria-selected="true"  href="#v-pills-Dados">   Alterar Dados</a></li>
+										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link"        id="v-pills-Foto-tab"    data-toggle="tab" aria-selected="false" href="#v-pills-Foto">    Alterar Foto</a></li>
+										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link"        id="v-pills-Senha-tab"   data-toggle="tab" aria-selected="false" href="#v-pills-Senha">   Alterar Senha</a></li>
+<!--										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link"        id="v-pills-Cei-tab"     data-toggle="tab" aria-selected="false" href="#v-pills-Cei">     CEI Investidor</a></li>-->
+										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link"        id="v-pills-Alertas-tab" data-toggle="tab" aria-selected="false" href="#v-pills-Alertas"> Alertas</a></li>
+										<li class="nav-item"> <a style="height:40px;  margin-bottom:5px;" class="border border-secondary nav-link"        id="v-pills-Resetar-tab" data-toggle="tab" aria-selected="false" href="#v-pills-Resetar"> Limpar Todos os Dados</a></li>
+									</ul>
+									<!-- Nav Tabs -->
+								</div>
+								<!-- Div col 3-->
+
+								<!-- div col-9 -->
+								<div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+
+									<!-- div tab-content -->
+									<div class="tab-content" id="v-pills-tabContent">
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade show active" id="v-pills-Dados" role="tabpanel" aria-labelledby="v-pills-Dados-tab">
+											<h4>Alterar Dados</h4>
+											<hr/>
+											<form id="frmDados" name="frmDados" method="POST" role="form" class="needs-validation" novalidate>
+												<div class="form-group row">
+													<label for="txtNome" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Nome</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtNome" name="txtNome" type="text" aria-describedby="nameHelp" placeholder="Nome Completo">
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtChatId" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Id. Telegram</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtChatId" name="txtChatId" type="text" aria-describedby="nameHelp" placeholder="Id. Telegram">
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtEmail" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Email</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtEmail" name="txtEmail" type="email" aria-describedby="emailHelp" placeholder="E-mail" disabled>
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-sm-3"> </div>
+													<div class="col-sm-4">
+														<a style="width: 220px"  onclick="fSalvarPerfil('/');" name="btnSalvarPerfil" id="btnSalvarPerfil" class="btn btn-primary btn-round waves-effect" role="button" aria-pressed="true" href="javascript:void(0);"><i class="fa fa-check" aria-hidden="true"></i> &nbsp;Salvar Dados </a>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!-- div tab-pane -->
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade" id="v-pills-Foto" role="tabpanel" aria-labelledby="v-pills-Foto-tab">
+											<h4>Alterar Foto</h4>
+											<hr/>
+											<form id="frmFoto" name="frmFoto" method="POST" role="form" class="needs-validation" novalidate>
+
+												<div class="row clearfix">
+													<div class="col-sm-3 text-center">
+														<img id="imgPerfil" name="imgPerfil" width="96" height="96" class="user_pic rounded-circle img-raised" onerror="this.src='{{ url_for('static', filename='pages/img/pessoa-icon.png') }}'" alt="Imagem do Pefil">
+													</div>
+													<div class="col-sm-8">
+														<div class="row clearfix">
+															<label class="col-sm-8 font-weight-bold text-left">Selecione uma Foto</label>
+														</div>
+														<div class="row clearfix">
+															<div class="col-sm-8">  <input type="file" name="txtFoto" id="txtFoto" class="form-control-file" accept="image/*"> </div>
+														</div>
+														<br>
+														<div class="row clearfix">
+															<div class="col-sm-8">
+																<a style="width: 220px"  onclick="fImportarFoto('/');" name="btnSalvarFoto" id="btnSalvarFoto" class="btn btn-primary btn-round waves-effect" role="button" aria-pressed="true" href="javascript:void(0);"> <i class="fa fa-check" aria-hidden="true"></i> &nbsp;Salvar Foto </a>
+															</div>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!-- div tab-pane -->
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade" id="v-pills-Senha" role="tabpanel" aria-labelledby="v-pills-Senha-tab">
+											<h4>Alterar Senha</h4>
+											<hr/>
+											<form id="frmSenha" name="frmSenha" method="POST" role="form" class="needs-validation" novalidate>
+												<div class="form-group row">
+													<label for="txtSenhaAtual" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Senha Atual</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtSenhaAtual" name="txtSenhaAtual" type="password" placeholder="Senha Atual" >
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtNovaSenha" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Nova Senha</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtNovaSenha" name="txtNovaSenha" type="password" placeholder="Nova Senha" >
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtConfirNovaSenha" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Confirmar Senha</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtConfirNovaSenha" name="txtConfirNovaSenha" type="password" placeholder="Confirmar Senha" >
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-sm-3"> </div>
+													<div class="col-sm-8">
+														<a style="width: 220px"  onclick="fSalvarSenha('/');" name="btnSalvarSenha" id="btnSalvarSenha" class="btn btn-primary btn-round waves-effect" role="button" aria-pressed="true" href="javascript:void(0);"> <i class="fa fa-check" aria-hidden="true"></i> &nbsp;Salvar Senha </a>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!-- div tab-pane -->
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade" id="v-pills-Cei" role="tabpanel" aria-labelledby="v-pills-Cei-tab">
+											<h4>Habilitar/Desabilitar CEI Investidor</h4>
+											<hr/>
+											<form id="frmCei" name="frmCei" method="POST" role="form" class="needs-validation" novalidate autocomplete="off">
+												<div class="form-group row">
+													<label for="txtCeiCPF" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">CPF:</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtCeiCPF" name="txtCeiCPF" type="text" aria-describedby="nameHelp" placeholder="CPF" maxlength="11"  autocomplete="off" onblur="javascript:formataCampoNew(this, FMT_CPF)" onkeyup="javascript:validaKey(this,  FMT_CPF)">
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtCeiSenha" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Senha</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtCeiSenha" name="txtCeiSenha" type="password" autocomplete="off" placeholder="Senha" >
+													</div>
+												</div>
+												<div class="form-group row">
+													<label for="txtCeiSenha" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Situação</label>
+													<div class="col-sm-4">
+														<span class="font-weight-bold text-muted" style="font-size: 12px;" id="txtDetCeiSitDescr" name="txtDetCeiSitDescr"/>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-sm-3"> </div>
+													<div class="col-sm-8">
+														<a style="width: 220px"  onclick="fSalvarDadosCei('/');" name="btnSalvarCei" id="btnSalvarCei" class="btn btn-primary btn-round waves-effect" role="button" aria-pressed="true" href="javascript:void(0);"> <i name="iSalvarCei" id="iSalvarCei" class="fa fa-check" aria-hidden="true"></i> &nbsp;Salvar Dados </a>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!-- div tab-pane -->
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade" id="v-pills-Alertas" role="tabpanel" aria-labelledby="v-pills-Alertas-tab">
+
+											<h4>Configurações de Alertas</h4>
+											<br/>
+
+											<!-- div card Todos -->
+											<div class="row">
+												<div class="col">
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Todos por E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Todos por Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_TODOS" name="chk_E_TODOS" type="checkbox" /> <label for="chk_E_TODOS" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_TODOS" name="chk_T_TODOS" type="checkbox" /> <label for="chk_T_TODOS" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<hr/>
+											<!-- div card Todos -->
+
+											<!-- div card Login -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">LOGIN...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Tentativa de Login</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_LOGIN_02" name="chk_E_LOGIN_02" type="checkbox" /> <label for="chk_E_LOGIN_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_LOGIN_02" name="chk_T_LOGIN_02" type="checkbox" /> <label for="chk_T_LOGIN_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Login Ativado/Bloqueado/Inativado</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_LOGIN_03" name="chk_E_LOGIN_03" type="checkbox" /> <label for="chk_E_LOGIN_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_LOGIN_03" name="chk_T_LOGIN_03" type="checkbox" /> <label for="chk_T_LOGIN_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card Login -->
+
+											<!-- div card PERFIL -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"><h6> <span class="title text-dark">PERFIL...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Alterar Senha</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PERFIL_01" name="chk_E_PERFIL_01" type="checkbox" /> <label for="chk_E_PERFIL_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PERFIL_01" name="chk_T_PERFIL_01" type="checkbox" /> <label for="chk_T_PERFIL_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Limpar Todos os Dados</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PERFIL_02" name="chk_E_PERFIL_02" type="checkbox" /> <label for="chk_E_PERFIL_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PERFIL_02" name="chk_T_PERFIL_02" type="checkbox" /> <label for="chk_T_PERFIL_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Limpar Todas as Operações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PERFIL_03" name="chk_E_PERFIL_03" type="checkbox" /> <label for="chk_E_PERFIL_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PERFIL_03" name="chk_T_PERFIL_03" type="checkbox" /> <label for="chk_T_PERFIL_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Limpar Todos os Proventos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PERFIL_04" name="chk_E_PERFIL_04" type="checkbox" /> <label for="chk_E_PERFIL_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PERFIL_04" name="chk_T_PERFIL_04" type="checkbox" /> <label for="chk_T_PERFIL_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card PERFIL -->
+
+											<!-- div card Portfólio  -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">Portfólio...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Desempenho do Dia</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PORTFOLIO_01" name="chk_E_PORTFOLIO_01" type="checkbox" /> <label for="chk_E_PORTFOLIO_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PORTFOLIO_01" name="chk_T_PORTFOLIO_01" type="checkbox" /> <label for="chk_T_PORTFOLIO_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card Portfólio -->
+
+											<!-- div card Proventos -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">PROVENTOS...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Data de Aprovação</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PROVENTOS_01" name="chk_E_PROVENTOS_01" type="checkbox" /> <label for="chk_E_PROVENTOS_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PROVENTOS_01" name="chk_T_PROVENTOS_01" type="checkbox" /> <label for="chk_T_PROVENTOS_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Data de Ex-Proventos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PROVENTOS_02" name="chk_E_PROVENTOS_02" type="checkbox" /> <label for="chk_E_PROVENTOS_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PROVENTOS_02" name="chk_T_PROVENTOS_02" type="checkbox" /> <label for="chk_T_PROVENTOS_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Data de Pagamento</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_PROVENTOS_03" name="chk_E_PROVENTOS_03" type="checkbox" /> <label for="chk_E_PROVENTOS_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_PROVENTOS_03" name="chk_T_PROVENTOS_03" type="checkbox" /> <label for="chk_T_PROVENTOS_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card Proventos -->
+
+											<!-- div card CEI -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">CEI...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Integração Ativada/Inativada</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_CEI_01" name="chk_E_CEI_01" type="checkbox" /> <label for="chk_E_CEI_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_CEI_01" name="chk_T_CEI_01" type="checkbox" /> <label for="chk_T_CEI_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Falha no Login</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_CEI_02" name="chk_E_CEI_02" type="checkbox" /> <label for="chk_E_CEI_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_CEI_02" name="chk_T_CEI_02" type="checkbox" /> <label for="chk_T_CEI_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Integração Realziada</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_CEI_03" name="chk_E_CEI_03" type="checkbox" /> <label for="chk_E_CEI_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_CEI_03" name="chk_T_CEI_03" type="checkbox" /> <label for="chk_T_CEI_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card CEI -->
+
+											<!-- div card FATOS RELEVANTES -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">FATOS RELEVANTES...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Fato Relevante</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_01" name="chk_E_FATOS_01" type="checkbox" /> <label for="chk_E_FATOS_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_01" name="chk_T_FATOS_01" type="checkbox" /> <label for="chk_T_FATOS_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Aviso aos Acionistas</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_02" name="chk_E_FATOS_02" type="checkbox" /> <label for="chk_E_FATOS_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_02" name="chk_T_FATOS_02" type="checkbox" /> <label for="chk_T_FATOS_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Comunicado ao Mercado</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_03" name="chk_E_FATOS_03" type="checkbox" /> <label for="chk_E_FATOS_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_03" name="chk_T_FATOS_03" type="checkbox" /> <label for="chk_T_FATOS_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Dados Financeiros</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_04" name="chk_E_FATOS_04" type="checkbox" /> <label for="chk_E_FATOS_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_04" name="chk_T_FATOS_04" type="checkbox" /> <label for="chk_T_FATOS_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ata do Reunião do Conselho</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_05" name="chk_E_FATOS_05" type="checkbox" /> <label for="chk_E_FATOS_05" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_05" name="chk_T_FATOS_05" type="checkbox" /> <label for="chk_T_FATOS_05" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Programa de Recompra de Ações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_06" name="chk_E_FATOS_06" type="checkbox" /> <label for="chk_E_FATOS_06" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_06" name="chk_T_FATOS_06" type="checkbox" /> <label for="chk_T_FATOS_06" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Calendario de Eventos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_07" name="chk_E_FATOS_07" type="checkbox" /> <label for="chk_E_FATOS_07" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_07" name="chk_T_FATOS_07" type="checkbox" /> <label for="chk_T_FATOS_07" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Aumento de Capital</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_08" name="chk_E_FATOS_08" type="checkbox" /> <label for="chk_E_FATOS_08" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_08" name="chk_T_FATOS_08" type="checkbox" /> <label for="chk_T_FATOS_08" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Outros</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_FATOS_09" name="chk_E_FATOS_09" type="checkbox" /> <label for="chk_E_FATOS_09" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_FATOS_09" name="chk_T_FATOS_09" type="checkbox" /> <label for="chk_T_FATOS_09" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card FATOS RELEVANTES -->
+
+											<!-- div card NOTICIAS Broadcast -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">NOTÍCIAS - BROADCAST...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Economia & Mercados</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_01" name="chk_E_NOTICIA_01" type="checkbox" /> <label for="chk_E_NOTICIA_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_01" name="chk_T_NOTICIA_01" type="checkbox" /> <label for="chk_T_NOTICIA_01" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card NOTICIAS Broadcast -->
+
+
+											<!-- div card NOTICIAS ADVFN -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">NOTÍCIAS - ADVFN...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Repórter ADVFN</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_56" name="chk_E_NOTICIA_56" type="checkbox" /> <label for="chk_E_NOTICIA_56" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_56" name="chk_T_NOTICIA_56" type="checkbox" /> <label for="chk_T_NOTICIA_56" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card NOTICIAS ADVFN -->
+
+											<!-- div card NOTICIAS INVESTING -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">NOTÍCIAS - INVESTING...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_52" name="chk_E_NOTICIA_52" type="checkbox" /> <label for="chk_E_NOTICIA_52" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_52" name="chk_T_NOTICIA_52" type="checkbox" /> <label for="chk_T_NOTICIA_52" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">FIIs</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_53" name="chk_E_NOTICIA_53" type="checkbox" /> <label for="chk_E_NOTICIA_53" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_53" name="chk_T_NOTICIA_53" type="checkbox" /> <label for="chk_T_NOTICIA_53" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Carteiras Recomendadas</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_54" name="chk_E_NOTICIA_54" type="checkbox" /> <label for="chk_E_NOTICIA_54" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_54" name="chk_T_NOTICIA_54" type="checkbox" /> <label for="chk_T_NOTICIA_54" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card NOTICIAS Broadcast -->
+											<!-- div card FATOS RELEVANTES -->
+
+											<!-- div card NOTICIAS MoneyTimes -->
+											<br/>
+											<br/>
+											<!-- <hr/> -->
+											<div class="row">
+												<div class="col"> <h6> <span class="title text-dark">NOTÍCIAS - MONEY TIMES...</span> </h6> </div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">E-Mail</label>
+												</div>
+												<div class="col text-right">
+													<label style="font-size:12px;" class="font-weight-bold">Telegram</label>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Agronegócio</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_37" name="chk_E_NOTICIA_37" type="checkbox" /> <label for="chk_E_NOTICIA_37" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_37" name="chk_T_NOTICIA_37" type="checkbox" /> <label for="chk_T_NOTICIA_37" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Alimentos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_39" name="chk_E_NOTICIA_39" type="checkbox" /> <label for="chk_E_NOTICIA_39" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_39" name="chk_T_NOTICIA_39" type="checkbox" /> <label for="chk_T_NOTICIA_39" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Análise Técnica</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_12" name="chk_E_NOTICIA_12" type="checkbox" /> <label for="chk_E_NOTICIA_12" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_12" name="chk_T_NOTICIA_12" type="checkbox" /> <label for="chk_T_NOTICIA_12" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Aviação</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_44" name="chk_E_NOTICIA_44" type="checkbox" /> <label for="chk_E_NOTICIA_44" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_44" name="chk_T_NOTICIA_44" type="checkbox" /> <label for="chk_T_NOTICIA_44" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Aço</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_50" name="chk_E_NOTICIA_50" type="checkbox" /> <label for="chk_E_NOTICIA_50" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_50" name="chk_T_NOTICIA_50" type="checkbox" /> <label for="chk_T_NOTICIA_50" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_07" name="chk_E_NOTICIA_07" type="checkbox" /> <label for="chk_E_NOTICIA_07" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_07" name="chk_T_NOTICIA_07" type="checkbox" /> <label for="chk_T_NOTICIA_07" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Bancos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_22" name="chk_E_NOTICIA_22" type="checkbox" /> <label for="chk_E_NOTICIA_22" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_22" name="chk_T_NOTICIA_22" type="checkbox" /> <label for="chk_T_NOTICIA_22" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Bolsa de Valores</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_05" name="chk_E_NOTICIA_05" type="checkbox" /> <label for="chk_E_NOTICIA_05" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_05" name="chk_T_NOTICIA_05" type="checkbox" /> <label for="chk_T_NOTICIA_05" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Carteira Recomendada</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_23" name="chk_E_NOTICIA_23" type="checkbox" /> <label for="chk_E_NOTICIA_23" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_23" name="chk_T_NOTICIA_23" type="checkbox" /> <label for="chk_T_NOTICIA_23" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Colunistas</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_17" name="chk_E_NOTICIA_17" type="checkbox" /> <label for="chk_E_NOTICIA_17" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_17" name="chk_T_NOTICIA_17" type="checkbox" /> <label for="chk_T_NOTICIA_17" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Commodities</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_25" name="chk_E_NOTICIA_25" type="checkbox" /> <label for="chk_E_NOTICIA_25" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_25" name="chk_T_NOTICIA_25" type="checkbox" /> <label for="chk_T_NOTICIA_25" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Comprar/Vender</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_16" name="chk_E_NOTICIA_16" type="checkbox" /> <label for="chk_E_NOTICIA_16" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_16" name="chk_T_NOTICIA_16" type="checkbox" /> <label for="chk_T_NOTICIA_16" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Corretoras</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_26" name="chk_E_NOTICIA_26" type="checkbox" /> <label for="chk_E_NOTICIA_26" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_26" name="chk_T_NOTICIA_26" type="checkbox" /> <label for="chk_T_NOTICIA_26" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Cripto/Bitcoin</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_30" name="chk_E_NOTICIA_30" type="checkbox" /> <label for="chk_E_NOTICIA_30" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_30" name="chk_T_NOTICIA_30" type="checkbox" /> <label for="chk_T_NOTICIA_30" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Dividendos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_11" name="chk_E_NOTICIA_11" type="checkbox" /> <label for="chk_E_NOTICIA_11" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_11" name="chk_T_NOTICIA_11" type="checkbox" /> <label for="chk_T_NOTICIA_11" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Dívidas</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_40" name="chk_E_NOTICIA_40" type="checkbox" /> <label for="chk_E_NOTICIA_40" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_40" name="chk_T_NOTICIA_40" type="checkbox" /> <label for="chk_T_NOTICIA_40" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">ETF</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_09" name="chk_E_NOTICIA_09" type="checkbox" /> <label for="chk_E_NOTICIA_09" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_09" name="chk_T_NOTICIA_09" type="checkbox" /> <label for="chk_T_NOTICIA_09" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Economia</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_03" name="chk_E_NOTICIA_03" type="checkbox" /> <label for="chk_E_NOTICIA_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_03" name="chk_T_NOTICIA_03" type="checkbox" /> <label for="chk_T_NOTICIA_03" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Empresas</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_19" name="chk_E_NOTICIA_19" type="checkbox" /> <label for="chk_E_NOTICIA_19" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_19" name="chk_T_NOTICIA_19" type="checkbox" /> <label for="chk_T_NOTICIA_19" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Farmácias</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_55" name="chk_E_NOTICIA_55" type="checkbox" /> <label for="chk_E_NOTICIA_55" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_55" name="chk_T_NOTICIA_55" type="checkbox" /> <label for="chk_T_NOTICIA_55" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ferrovias</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_47" name="chk_E_NOTICIA_47" type="checkbox" /> <label for="chk_E_NOTICIA_47" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_47" name="chk_T_NOTICIA_47" type="checkbox" /> <label for="chk_T_NOTICIA_47" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Frigoríficos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_38" name="chk_E_NOTICIA_38" type="checkbox" /> <label for="chk_E_NOTICIA_38" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_38" name="chk_T_NOTICIA_38" type="checkbox" /> <label for="chk_T_NOTICIA_38" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Fundos Imobiliários</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_08" name="chk_E_NOTICIA_08" type="checkbox" /> <label for="chk_E_NOTICIA_08" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_08" name="chk_T_NOTICIA_08" type="checkbox" /> <label for="chk_T_NOTICIA_08" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Fusões & Aquisições</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_15" name="chk_E_NOTICIA_15" type="checkbox" /> <label for="chk_E_NOTICIA_15" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_15" name="chk_T_NOTICIA_15" type="checkbox" /> <label for="chk_T_NOTICIA_15" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Governança Corporativa</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_45" name="chk_E_NOTICIA_45" type="checkbox" /> <label for="chk_E_NOTICIA_45" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_45" name="chk_T_NOTICIA_45" type="checkbox" /> <label for="chk_T_NOTICIA_45" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">IPO</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_42" name="chk_E_NOTICIA_42" type="checkbox" /> <label for="chk_E_NOTICIA_42" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_42" name="chk_T_NOTICIA_42" type="checkbox" /> <label for="chk_T_NOTICIA_42" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ibovespa</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_06" name="chk_E_NOTICIA_06" type="checkbox" /> <label for="chk_E_NOTICIA_06" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_06" name="chk_T_NOTICIA_06" type="checkbox" /> <label for="chk_T_NOTICIA_06" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Imóveis</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_35" name="chk_E_NOTICIA_35" type="checkbox" /> <label for="chk_E_NOTICIA_35" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_35" name="chk_T_NOTICIA_35" type="checkbox" /> <label for="chk_T_NOTICIA_35" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Indústria</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_43" name="chk_E_NOTICIA_43" type="checkbox" /> <label for="chk_E_NOTICIA_43" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_43" name="chk_T_NOTICIA_43" type="checkbox" /> <label for="chk_T_NOTICIA_43" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Internet</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_18" name="chk_E_NOTICIA_18" type="checkbox" /> <label for="chk_E_NOTICIA_18" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_18" name="chk_T_NOTICIA_18" type="checkbox" /> <label for="chk_T_NOTICIA_18" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Investimentos</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_04" name="chk_E_NOTICIA_04" type="checkbox" /> <label for="chk_E_NOTICIA_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_04" name="chk_T_NOTICIA_04" type="checkbox" /> <label for="chk_T_NOTICIA_04" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Mercados</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_02" name="chk_E_NOTICIA_02" type="checkbox" /> <label for="chk_E_NOTICIA_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_02" name="chk_T_NOTICIA_02" type="checkbox" /> <label for="chk_T_NOTICIA_02" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Mineração</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_51" name="chk_E_NOTICIA_51" type="checkbox" /> <label for="chk_E_NOTICIA_51" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_51" name="chk_T_NOTICIA_51" type="checkbox" /> <label for="chk_T_NOTICIA_51" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Morning Call</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_14" name="chk_E_NOTICIA_14" type="checkbox" /> <label for="chk_E_NOTICIA_14" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_14" name="chk_T_NOTICIA_14" type="checkbox" /> <label for="chk_T_NOTICIA_14" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ofertas de ações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_34" name="chk_E_NOTICIA_34" type="checkbox" /> <label for="chk_E_NOTICIA_34" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_34" name="chk_T_NOTICIA_34" type="checkbox" /> <label for="chk_T_NOTICIA_34" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Opinião</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_27" name="chk_E_NOTICIA_27" type="checkbox" /> <label for="chk_E_NOTICIA_27" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_27" name="chk_T_NOTICIA_27" type="checkbox" /> <label for="chk_T_NOTICIA_27" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Ouro</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_21" name="chk_E_NOTICIA_21" type="checkbox" /> <label for="chk_E_NOTICIA_21" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_21" name="chk_T_NOTICIA_21" type="checkbox" /> <label for="chk_T_NOTICIA_21" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Papel & Celulose</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_36" name="chk_E_NOTICIA_36" type="checkbox" /> <label for="chk_E_NOTICIA_36" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_36" name="chk_T_NOTICIA_36" type="checkbox" /> <label for="chk_T_NOTICIA_36" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Petróleo</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_31" name="chk_E_NOTICIA_31" type="checkbox" /> <label for="chk_E_NOTICIA_31" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_31" name="chk_T_NOTICIA_31" type="checkbox" /> <label for="chk_T_NOTICIA_31" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Privatização</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_28" name="chk_E_NOTICIA_28" type="checkbox" /> <label for="chk_E_NOTICIA_28" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_28" name="chk_T_NOTICIA_28" type="checkbox" /> <label for="chk_T_NOTICIA_28" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Resultados</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_13" name="chk_E_NOTICIA_13" type="checkbox" /> <label for="chk_E_NOTICIA_13" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_13" name="chk_T_NOTICIA_13" type="checkbox" /> <label for="chk_T_NOTICIA_13" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Saneamento</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_48" name="chk_E_NOTICIA_48" type="checkbox" /> <label for="chk_E_NOTICIA_48" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_48" name="chk_T_NOTICIA_48" type="checkbox" /> <label for="chk_T_NOTICIA_48" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Saúde</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_41" name="chk_E_NOTICIA_41" type="checkbox" /> <label for="chk_E_NOTICIA_41" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_41" name="chk_T_NOTICIA_41" type="checkbox" /> <label for="chk_T_NOTICIA_41" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Selic</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_29" name="chk_E_NOTICIA_29" type="checkbox" /> <label for="chk_E_NOTICIA_29" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_29" name="chk_T_NOTICIA_29" type="checkbox" /> <label for="chk_T_NOTICIA_29" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Setor Aéreo</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_33" name="chk_E_NOTICIA_33" type="checkbox" /> <label for="chk_E_NOTICIA_33" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_33" name="chk_T_NOTICIA_33" type="checkbox" /> <label for="chk_T_NOTICIA_33" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Setor Elétrico</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_24" name="chk_E_NOTICIA_24" type="checkbox" /> <label for="chk_E_NOTICIA_24" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_24" name="chk_T_NOTICIA_24" type="checkbox" /> <label for="chk_T_NOTICIA_24" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Setor Imobiliário</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_32" name="chk_E_NOTICIA_32" type="checkbox" /> <label for="chk_E_NOTICIA_32" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_32" name="chk_T_NOTICIA_32" type="checkbox" /> <label for="chk_T_NOTICIA_32" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Siderurgia</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_49" name="chk_E_NOTICIA_49" type="checkbox" /> <label for="chk_E_NOTICIA_49" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_49" name="chk_T_NOTICIA_49" type="checkbox" /> <label for="chk_T_NOTICIA_49" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Telecomunicações</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_20" name="chk_E_NOTICIA_20" type="checkbox" /> <label for="chk_E_NOTICIA_20" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_20" name="chk_T_NOTICIA_20" type="checkbox" /> <label for="chk_T_NOTICIA_20" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Tesouro Direto</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_10" name="chk_E_NOTICIA_10" type="checkbox" /> <label for="chk_E_NOTICIA_10" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_10" name="chk_T_NOTICIA_10" type="checkbox" /> <label for="chk_T_NOTICIA_10" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Transportes</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_46" name="chk_E_NOTICIA_46" type="checkbox" /> <label for="chk_E_NOTICIA_46" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_46" name="chk_T_NOTICIA_46" type="checkbox" /> <label for="chk_T_NOTICIA_46" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<div class="row text-muted bg-light border">
+												<div class="col">
+													<label style="font-size:12px;" class="font-weight-bold">Outros</label>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_E_NOTICIA_99" name="chk_E_NOTICIA_99" type="checkbox" /> <label for="chk_E_NOTICIA_99" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+													<div class="material-switch pull-right"> <input id="chk_T_NOTICIA_99" name="chk_T_NOTICIA_99" type="checkbox" /> <label for="chk_T_NOTICIA_99" class="bg-primary"></label> </div>
+												</div>
+												<div class="col">
+												</div>
+											</div>
+											<!-- <hr/> -->
+											<!-- div card NOTICIAS MoneyTimes -->
+
+											<br/>
+											<br/>
+
+										</div>
+										<!-- div tab-pane -->
+
+										<!-- div tab-pane -->
+										<div class="tab-pane fade" id="v-pills-Resetar" role="tabpanel" aria-labelledby="v-pills-Resetar-tab">
+											<h4>Resetar todos os dados cadastrados</h4>
+											<hr/>
+											<form id="frmResetar" name="frmResetar" method="POST" role="form" class="needs-validation" novalidate>
+												<div class="form-group row">
+													<label class="col-sm-12 col-form-label col-form-label-sm font-weight-bold text-center">Desejar limpar todas as Operações, Proventos, Aluguéis, Radar, Corretora, E-mail, Apuração e Carteira cadastrados?</label>
+												</div>
+												<div class="form-group row">
+													<label for="txtSenhaResetar" class="col-sm-3 col-form-label col-form-label-sm font-weight-bold text-right">Senha</label>
+													<div class="col-sm-4">
+														<input class="form-control form-control-sm" id="txtSenhaResetar" name="txtSenhaResetar" type="password" placeholder="Senha" >
+														<div class="invalid-feedback"> Campo obrigatório!</div>
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-sm-3"> </div>
+													<div class="col-sm-8">
+														<a style="width: 220px" onclick="fResetarOperac('/');" name="btnResetarOperac" id="btnResetarOperac" class="font-weight-bold btn btn-danger btn-simple btn-round waves-effect" role="button" aria-pressed="true" href="javascript:void(0);"> <i id="iRefreshResetarOperac" class="fa fa-trash-o fa-lg" aria-hidden="true"></i> &nbsp;Resetar Todos os Dados </a>
+													</div>
+												</div>
+											</form>
+										</div>
+										<!-- div tab-pane -->
+
+									</div>
+									<!-- div tab-content -->
+
+									<!-- Div Row clearfix -->
+									<div class="row clearfix">
+										<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12" id="AreaAlertaPrinc"> </div>
+									</div>
+									<!-- Div Row clearfix -->
+
+								</div>
+								<!-- div col-9 -->
+
+							</div>
+							<!-- Div Row clearfix -->
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Div Conteudo Pag -->
+
+			{% include 'component_rodape.html' %}
+
+		</div>
+	</section>
+	<!-- Div Main Content -->
+
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ static_autoversion('pages/js/PagPerfil.js') }}"></script>
+	<script>
+		$(document).ready(function() {
+
+			fCarregarDados( "/" );
+
+			fCarregarDadosAlertas( "/" );
+
+			$( ".material-switch" ).change(function() {
+
+				var id_alerta       = $(this).children().attr('id').replace('chk_', '');
+				var tipo_assinatura = id_alerta.toString().substring(0, 1); // pegar somente o primeiro digito do id alerta
+				var tipo_alerta     = id_alerta.toString().substring(2, id_alerta.toString().length ).replace('_', '-'); // pegar todos digitos do id alerta a partir do terceiro item, ou segundo indice
+				var situacao        = $(this).children().is(":checked") == true ? "A" : "I"; // setar A-Ativo para cheche true, ou I-Inativo para check false
+
+				if( tipo_alerta != 'TODOS'){
+
+					fSalvarDadosAlertas( "/", tipo_assinatura, tipo_alerta, situacao );
+
+					var qtdeTot     = 0;
+					var qtdeAtivo   = 0;
+					var qtdeinativo = 0;
+
+					$(".material-switch").each(function() {
+						var id_alerta_item       = $(this).children().attr('id').replace('chk_', '');
+						var tipo_assinatura_item = id_alerta_item.toString().substring(0, 1); // pegar somente o primeiro digito do id alerta
+						var tipo_alerta_item     = id_alerta_item.toString().substring(2, id_alerta_item.toString().length ).replace('_', '-'); // pegar todos digitos do id alerta a partir do terceiro item, ou segundo indice
+						var situacao_item        = $(this).children().is(":checked") == true ? "A" : "I"; // setar A-Ativo para cheche true, ou I-Inativo para check false
+						if ( tipo_alerta_item != 'TODOS' && tipo_assinatura_item == tipo_assinatura ){
+							qtdeTot += 1;
+							if ( situacao_item == 'A' ) qtdeAtivo   += 1;
+							if ( situacao_item == 'I' ) qtdeinativo += 1;
+						}
+					});//$(".material-switch").each(function() {
+
+					if ( tipo_assinatura == 'E' ) document.getElementById("chk_E_TODOS").checked = ( qtdeTot == qtdeAtivo );
+					if ( tipo_assinatura == 'T' ) document.getElementById("chk_T_TODOS").checked = ( qtdeTot == qtdeAtivo );
+
+				} //if( tipo_alerta != 'TODOS'){
+
+				if( tipo_alerta == 'TODOS'){
+					$(".material-switch").each(function() {
+						var id_alerta_item       = $(this).children().attr('id').replace('chk_', '');
+						var tipo_assinatura_item = id_alerta_item.toString().substring(0, 1); // pegar somente o primeiro digito do id alerta
+						var tipo_alerta_item     = id_alerta_item.toString().substring(2, id_alerta_item.toString().length ).replace('_', '-'); // pegar todos digitos do id alerta a partir do terceiro item, ou segundo indice
+						if ( tipo_alerta_item != 'TODOS' && tipo_assinatura_item == tipo_assinatura ){
+							$(this).children().prop("checked", (situacao == "A"));
+							fSalvarDadosAlertas( "/", tipo_assinatura_item, tipo_alerta_item, situacao );
+						}
+					}); //$(".material-switch").each(function() {
+				}// if( tipo_alerta == 'TODOS'){
+
+			});
+
+		});
+	</script>
+
+{% endblock %}

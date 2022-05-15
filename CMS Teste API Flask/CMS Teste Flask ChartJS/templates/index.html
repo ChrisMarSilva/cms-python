@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChartJS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css" />
+    <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <h1>Teste</h1>
+
+    <canvas id="lineChart" width="900" height="400"></canvas>
+
+    <button id="updateBtn">Update the Chart!</button>
+    <button id="chart1">Chart 1</button>
+    <button id="chart2">Chart 2</button>
+    <button id="chart3">Chart 3</button>
+
+    <div class="ct-chart ct-perfect-fourth" id="chart0"></div>
+
+    <script type="text/javascript">
+
+        //--------------------------------------------------
+
+        var myChart;
+        var num = 0
+
+        var getData = $.get('/data');
+        getData.done(function(results){
+            console.log(results.results);
+            var data = {labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], series: [results.results]}; // series: [[5, 2, 4, 2, 0]],
+            var options = {width: 500, height: 300};
+            myChart = new Chartist.Line('#chart0', data, options);
+        });
+
+        function updateChat(){
+            var updateData = $.get('/data');
+            updateData.done(function(results){
+                console.log('num', num, 'results', results.results);
+                var data = {labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], series: [results.results]};
+                myChart.update(data);
+                // num++
+                // if ( num <= 10 ) {
+                //     setTimeout(function(){ updateChat(); }, 500); 
+                // } else {
+                //     num = 0;
+                // }
+            });
+        }
+
+        $('#updateBtn').on('click', updateChat());
+
+        $('#chart1').on('click', function(){
+            var id = $(this).attr("id");
+            console.log(id, id);
+        }); 
+
+        //--------------------------------------------------
+
+        const ctx = document.getElementById('lineChart').getContext('2d');
+
+        //  let labels = JSON.parse({{ labels | tojson }})
+        //  let values = JSON.parse({{ values | tojson }})
+
+        const lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ labels | safe }},
+                datasets: [{
+                    label: 'Data points',
+                    data: {{ values | safe }},
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    lineTensio: 0.5,
+                }]
+            },
+            options: {
+                responsive: false,
+            }
+        });
+
+        //--------------------------------------------------
+
+        $(document).ready(function(){
+        })
+
+    </script>
+</body>
+</html>

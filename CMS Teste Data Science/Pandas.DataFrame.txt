@@ -1,0 +1,49 @@
+
+Pandas.DataFrame
+
+carrregar DataSet, com separador correto, e encoding adequado
+df.shape - verificar colunas e linhas
+df.dtypes - verificar tipagens
+arrumar tipagem colunas
+df.info() - verificar tipagens e valores
+arrumar valores errados ou faltantes
+df.astype({'col1': 'int32'}).dtypes
+ser.astype('category')
+cat_dtype = pd.api.types.CategoricalDtype(categories=[2, 1], ordered=True)
+ser.astype(cat_dtype)
+df.astype('int32').dtypes
+s2 = s1.astype('int64', copy=False)
+df["a"] = pd.to_numeric(df["a"])
+df = df.apply(pd.to_numeric) # convert all columns of DataFrame
+df[["a", "b"]] = df[["a", "b"]].apply(pd.to_numeric)
+df.apply(pd.to_numeric, errors='ignore')
+df[['col.name1', 'col.name2'...]] = df[['col.name1', 'col.name2'..]].astype('data_type')
+df['DataFrame Column'] = df['DataFrame Column'].astype(float)
+df['col'] = pd.to_datetime(df['col'])
+pd.to_datetime(pd.Series(['05/23/2005']), format="%m/%d/%Y")
+df['date_col'] =  pd.to_datetime(df['date_col'], format='%d/%m/%Y')
+pd.to_datetime('13000101', format='%Y%m%d', errors='ignore')
+float              float64
+int                  int64
+datetime    datetime64[ns]
+string              object
+bool                  bool
+category
+
+df.columns
+df.drop(['col1','col2'], axis=1, inplace=True) remover colunas desnecessarias
+df.drop(['col1','col2'], axis='columns', inplace=True) remover colunas desnecessarias
+renomear colunas
+df.index
+df.reset_index() arrumar index
+remover registros errados, nulos e etcs
+df.describe() -- metricas, medias, max, min e etc
+df.nlargest(3, 'population', keep='last') -- Retorna as primeiras n linhas ordenadas por colunas em ordem decrescente.
+df.nsmallest(3, 'population', keep='last') -- Retorna as primeiras n linhas ordenadas por colunas em ordem crescente.
+
+data.reset_index(inplace=True)
+
+-----
+
+
+

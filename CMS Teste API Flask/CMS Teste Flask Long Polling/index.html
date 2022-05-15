@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Long polling example</title>
+</head>
+<body onload="initialize();">
+    <h1>Long polling example</h1>
+    <p>This page demonstrates what long polling could look like.</p>
+    <p>Poll count: <span id="poll-count">0</span></p>
+</body>
+<!-- Enable HTTP fetching with promises -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!-- https://flask.palletsprojects.com/en/1.1.x/tutorial/static/ -->
+<script src="{{ url_for('static', filename='demo.js') }}"></script>
+</html>
