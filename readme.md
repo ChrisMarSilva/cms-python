@@ -1,11 +1,11 @@
-# Api de pdfs
+# Projetos para teste em Pyhon
 
 ## Dependências
 
-Para instalar as dependências, utilize o pip com o arquivo requirements-dev.txt
+Para instalar as dependências, utilize o pip com o arquivo requirements.txt
 
 ```
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 
 ou instale as dependencias com o comando abaixo:
