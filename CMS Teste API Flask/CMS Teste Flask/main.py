@@ -8,7 +8,7 @@ import json
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 # app.config.from_object(__name__)
 CORS(app=app, resources={r'/*': {'origins': '*'}})
 

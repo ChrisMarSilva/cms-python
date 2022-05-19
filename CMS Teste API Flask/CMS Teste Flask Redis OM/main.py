@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(import_name=__name__.split('.')[0], template_folder='') 
-
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 def build_results(people):
     response = []

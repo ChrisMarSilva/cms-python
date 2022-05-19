@@ -3,7 +3,7 @@ from flask_recaptcha import ReCaptcha
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = '4eFvwbWtqafGhCD0Cpwr5GGK4AfHUf2t'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 app.config['RECAPTCHA_ENABLED'] =True
 app.config['RECAPTCHA_SITE_KEY'] = "dsfdfsfsd"  #'YOUR_RECAPTCHA_SITE_KEY'
 app.config['RECAPTCHA_SECRET_KEY'] = 'vbvcbvcbv' # "aNGYwYjkXx"  #'YOUR_RECAPTCHA_SECRET_KEY'

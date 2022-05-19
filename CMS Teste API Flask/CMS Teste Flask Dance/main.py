@@ -3,7 +3,7 @@ from flask_dance.contrib.github import make_github_blueprint, github
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'WRB75eA9iHiBSQY2uZsGG8F'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 
 blueprint = make_github_blueprint(client_id="my-key-here", client_secret="my-secret-here")

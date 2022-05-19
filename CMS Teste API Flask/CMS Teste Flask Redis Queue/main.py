@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(import_name=__name__, template_folder='')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 # r = redis.Redis()
 # q = Queue(connection=r)
 # q = Queue(connection=Redis())

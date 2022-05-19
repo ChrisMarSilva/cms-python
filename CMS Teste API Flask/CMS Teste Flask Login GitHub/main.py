@@ -1,15 +1,16 @@
 from flask import Flask, render_template, jsonify, session, abort, redirect, request, url_for
 from authlib.integrations.flask_client import OAuth, OAuthError
+import os
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
-app.config['GOOGLE_CLIENT_ID'] = "33204988932-u9hp7j74tvir9ubgpinka6p27sr0l319.apps.googleusercontent.com"
-app.config['GOOGLE_CLIENT_SECRET'] = "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"
-app.config['GITHUB_CLIENT_ID'] = "c07a880c0843c6cea0df"
-app.config['GITHUB_CLIENT_SECRET'] = "4dfbbb397263c8bdfc373309ba48d91f71a97764"
-app.config['TWITTER_CLIENT_ID'] = "WEJ5VS1HLWw1Z1o4OHpHSzlwd2o6MTpjaQ"
-app.config['TWITTER_CLIENT_SECRET'] = "Xtr26z6HjrNvRvmcJpL-4_crcXlg_QVWXdOJAMjdrhkUjlx6b8"
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['GOOGLE_CLIENT_ID'] = os.getenv('GOOGLE_CLIENT_ID')
+app.config['GOOGLE_CLIENT_SECRET'] = os.getenv('GOOGLE_CLIENT_SECRET')
+app.config['GITHUB_CLIENT_ID'] = os.getenv('GITHUB_CLIENT_ID')
+app.config['GITHUB_CLIENT_SECRET'] = os.getenv('GITHUB_CLIENT_SECRET')
+app.config['TWITTER_CLIENT_ID'] = os.getenv('TWITTER_CLIENT_ID')
+app.config['TWITTER_CLIENT_SECRET'] = os.getenv('TWITTER_CLIENT_SECRET')
 
 
 oauth = OAuth(app=app)

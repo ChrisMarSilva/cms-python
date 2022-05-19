@@ -34,7 +34,7 @@ def identity(payload):
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'WRB75eA9iHiBSQY2uZsGG8F'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 jwt = JWT(app, authenticate, identity)
 
 

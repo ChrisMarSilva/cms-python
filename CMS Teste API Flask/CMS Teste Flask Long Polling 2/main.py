@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(import_name=__name__, template_folder='', static_folder='static') # templates
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 api = restful.Api(app)
 
 

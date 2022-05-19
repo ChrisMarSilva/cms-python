@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 ui = FlaskUI(app, width=500, height=500) # add app and parameters
 
 

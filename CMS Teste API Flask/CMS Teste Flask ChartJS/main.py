@@ -4,7 +4,7 @@ from flask_pymongo import PyMongo
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 app.config["MONGO_DBNAME"] = "test-database-py-flask"
 app.config["MONGO_URI"] = 'mongodb://root:example@localhost:27017/test-database-py-flask?authSource=admin&maxPoolSize=20&retryWrites=true&w=majority'
 

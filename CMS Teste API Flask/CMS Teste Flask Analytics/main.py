@@ -3,7 +3,7 @@ from flask_analytics import Analytics
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'knDFcZRBfBLl4jp7vSgCi9GV0lOmxvSj'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 Analytics(app)
 app.config['ANALYTICS']['GAUGES']['SITE_ID'] = 'UrnHUopvHT'

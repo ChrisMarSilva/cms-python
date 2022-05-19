@@ -5,7 +5,7 @@ import asyncio
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 app.config["DEBUG"] = True
 # app.config["flask_profiler"] = {
 #     "enabled": app.config["DEBUG"], 

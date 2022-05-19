@@ -2,7 +2,7 @@ from flask import Flask, render_template
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'PGIfWFkgQsXosLA2SicI3cl0UrojygtX'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 
 blogs = [

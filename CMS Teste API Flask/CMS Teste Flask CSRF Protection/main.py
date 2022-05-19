@@ -5,7 +5,7 @@ from flask_wtf.file import FileField, FileRequired
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'RlBmows4uLAv0RUmWaXwzA5tWmwomwmm'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 csrf = CSRFProtect(app)
 
 

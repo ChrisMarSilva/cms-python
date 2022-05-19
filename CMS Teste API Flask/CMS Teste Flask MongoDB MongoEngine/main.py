@@ -7,8 +7,7 @@ from dotenv import load_dotenv
 
 
 app = Flask(import_name=__name__)
-app.secret_key = b'\xcc^\x91\xea\x17-\xd0W\x03\xa7\xf8J0\xac8\xc5'
-
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 # app.config['MONGODB_DB'] = 'project1'
 # app.config['MONGODB_HOST'] = '192.168.1.35'
 # app.config['MONGODB_PORT'] = 12345

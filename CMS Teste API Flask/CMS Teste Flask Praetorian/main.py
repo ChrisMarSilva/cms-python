@@ -44,7 +44,7 @@ class User(db.Model):
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'WRB75eA9iHiBSQY2uZsGG8F'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 app.config["JWT_ACCESS_LIFESPAN"] = {"hours": 24}
 app.config["JWT_REFRESH_LIFESPAN"] = {"days": 30}
 

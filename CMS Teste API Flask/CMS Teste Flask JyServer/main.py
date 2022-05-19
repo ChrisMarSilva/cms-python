@@ -4,7 +4,7 @@ import time
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'F8jmfdqFI8W54lcIwqE3n6WaxtLdwF6t'  # https://randomkeygen.com/
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 
 @js.use(app)

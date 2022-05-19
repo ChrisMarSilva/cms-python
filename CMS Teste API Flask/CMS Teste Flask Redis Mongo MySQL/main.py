@@ -9,7 +9,7 @@ import logging
 
 
 app = Flask(import_name=__name__.split('.')[0], template_folder='') 
-app.secret_key = b'\xcc^\x91\xea\x17-\xd0W\x03\xa7\xf8J0\xac8\xc5'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 # redis_client.init_app(app=app)
 
 from flask_cors import CORS

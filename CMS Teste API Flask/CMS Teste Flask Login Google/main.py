@@ -9,11 +9,11 @@ import requests
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-GOOGLE_CLIENT_ID = "33204988932-u9hp7j74tvir9ubgpinka6p27sr0l319.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=os.path.join(pathlib.Path(__file__).parent, "client_secret.json"),

@@ -4,7 +4,7 @@ from numpy import broadcast
 
 
 app = Flask(import_name=__name__)
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 socketio = SocketIO(app=app, cors_allowed_origins="*")
 
 

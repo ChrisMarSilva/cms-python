@@ -7,7 +7,7 @@ import os
 app = Flask(import_name=__name__)
 app.debug = True
 app.config["DEBUG"] = True
-app.config['SECRET_KEY'] = 'dcCLLqRG8eGHCNY8dGW6siWyFguVEaxs'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # https://randomkeygen.com/
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 # app.config['DEBUG_TB_PANELS'] = ('flask_debugtoolbar.panels.headers.HeaderDebugPanel', 'flask_debugtoolbar.panels.logger.LoggingPanel', 'flask_debugtoolbar.panels.timer.TimerDebugPanel')
 # app.config['DEBUG_TB_HOSTS'] = ('127.0.0.1', '::1' )
