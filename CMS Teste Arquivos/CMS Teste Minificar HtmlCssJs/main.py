@@ -54,7 +54,7 @@ def minificar_arquivo(path_origem: pathlib.Path, path_destino: pathlib.Path, ext
                     if extensao == Extensao.HTML: url = "https://api.dotmaui.com/client/1.1/htmlmin/"
                     elif extensao == Extensao.JS: url = "https://api.dotmaui.com/client/1.0/jsmin/"
                     elif extensao == Extensao.CSS: url = "https://api.dotmaui.com/client/1.2/cssmin/"
-                    YOUR_API_KEY = 'fAs37aLPRmUhsZsXL5Z0PqnY73sE42D8OoWq2rYPSUpgL'
+                    YOUR_API_KEY = '<YOUR_API_KEY>'
                     if extensao == Extensao.HTML: data = {'apikey': YOUR_API_KEY, 'html': reader.read(), 'collapsewhitespace': 'all'}
                     elif extensao == Extensao.JS: data = {'apikey': YOUR_API_KEY, 'js': reader.read()}
                     elif extensao == Extensao.CSS: data = {'apikey': YOUR_API_KEY, 'css': reader.read()}

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # https://www.alphavantage.co/documentation/
 load_dotenv() # To work with the .env file
 api_key = os.getenv('ALPHAVANTAGE_API_KEY')
-url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'  # https://www.alphavantage.co/query?function=OVERVIEW&symbol=IBM&apikey=demo'
+url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey={}'
 symbols = ['AAPL', 'GOOG', 'TSLA', 'MSFT']
 # nasdaq 100 - 102 stocks
 # symbols = ['FOXA','ATVI','ADBE','AKAM','ALXN','ALTR','AMZN','AAL','AMGN','ADI','AAPL','AMAT','ADSK','ADP','AVGO','BIDU','BBBY','BIIB','BMRN','BRCM','CHRW','CA','CTRX','CELG','CERN','CHTR','CHKP','CSCO','CTXS','CTSH','CMCSA','COST','DISCA','DISH','DLTR','EBAY','EA','EQIX','EXPD','ESRX','FB','FAST','FISV','GRMN','GILD','GOOG','GOOGL','GMCR','HSIC','ILMN','INTC','INTU','ISRG','KLAC','KHC','LRCX','LBTYA','LINTA','LMCK','LMCA','LLTC','MAR','MAT','MU','MSFT','MDLZ','MNST','MYL','NTAP','NFLX','NVDA','NXPI','ORLY','PCAR','PAYX','PCLN','QCOM','REGN','ROST','SNDK','SBAC','STX','SIAL','SIRI','SPLS','SBUX','SRCL','SYMC','TSLA','TXN','TSCO','TRIP','VRSK','VRTX','VIAB','VIP','VOD','WDC','WFM','WYNN','XLNX','YHOO']

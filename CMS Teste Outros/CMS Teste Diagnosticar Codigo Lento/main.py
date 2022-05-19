@@ -9,7 +9,7 @@ import platform
 from dotenv import load_dotenv
 
 
-url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey=0VFT22CBDGLSUANTE'
+url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol={}&apikey=<apikey>'
 symbols = ['AAPL', 'GOOG', 'TSLA', 'MSFT']
 
 
