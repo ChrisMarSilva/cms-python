@@ -1501,6 +1501,7 @@ def main():
         client     = get_client(mongo_uri=mongo_uri)
         db         = get_database(client=client)
         # collection = get_collection_usuarios(db=db)
+        # collection = get_collection_usuarios_log(db=db)
         # collection = get_collection_usuarios_comentario(db=db)
         # collection = get_collection_usuarios_comentario_reacao(db=db)
         # collection = get_collection_usuarios_comentario_denuncia(db=db)
@@ -1519,16 +1520,6 @@ def main():
         # tipo_usuario = 'A'   # I-Investidor  # A-Administrador
         # id_comentario = 784  # 784 # 796 # 800
         # #  uuid.uuid1()  # uuid.uuid4()  # uuid.uuid4().hex  # uuid.uuid4()  # UUID = uuid.uuid1()  UUID.int
-
-        # collection = get_collection_empresa_setor(db=db)
-        # collection = get_collection_empresa_subsetor(db=db)
-        # collection = get_collection_empresa_segmento(db=db)
-        # collection = get_collection_empresa(db=db)
-        # collection = get_collection_empresa_acao(db=db)
-        # collection = get_collection_empresa_fii(db=db)
-        # collection = get_collection_empresa_etf(db=db)
-        # collection = get_collection_empresa_bdr(db=db)
-        # collection = get_collection_empresa_cripto(db=db)
 
         # Teste #1
         # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na collection separadas
@@ -1637,6 +1628,49 @@ def main():
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
+
+        collection = get_collection_usuarios(db=db)
+        # collection = get_collection_usuarios_log(db=db)
+
+        id_usuario = 2  # 2-CMS
+        situaco = "A"  # A-Ativo
+        # situaco = "L"  # L-xxxx
+        # situaco = "P"  # P-Aguardando Confirmação de Email
+        # situaco = "I"  # I-Inativo
+        # dt_ini = "20220518" + "000000000"
+        # dt_fim = ""  # "20220518" + "235959000"
+
+        # rows = collection.find({'SITUACAO': situaco})
+        # rows = collection.find({})
+
+        rows = collection.aggregate(
+            [
+                {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'L'}}], 'as': 'LOG_WEB'}},
+                {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'P'}}], 'as': 'LOG_APP'}}, 
+                # {'$match': {'ID': id_usuario, 'SITUACAO': situaco}},
+                {'$project': {'_id' : 0, 'ID' : 1, 'NOME' : 1, 'EMAIL' : 1, 'DTHR_WEB': {'$max': '$LOG_WEB.DATAHORA'}, 'DTHR_APP': {'$max': '$LOG_APP.DATAHORA'}}}, 
+                # {'$sort': {"NOME": -1}},
+            ]
+        )
+
+        lista = {row['ID']: {'DTHR_WEB': row['DTHR_WEB'] if row['DTHR_WEB'] else '', 'DTHR_APP': row['DTHR_APP'] if row['DTHR_APP'] else ''}  for row in rows if row['ID'] == 2 or row['ID'] == 7}
+
+        # {k: v for v, k in enumerate(lst)}
+
+        for row in lista:  # rows
+            logger.warning(f'{row=}') 
+            # logger.warning(f'{row["ID"]=} - {row["NOME"]=} - {row["EMAIL"]=} - {row["DTHR_WEB"]=} - {row["DTHR_APP"]=}') 
+
+        logger.info(f'PESQUISA') 
+        logger.warning(f'{lista=}') 
+        # lista = {}
+        # lista[2] = {'ID': 2, 'DTHR_WEB': '20220518204522275', 'DTHR_APP': '20220513104701045'}
+        # lista[11] = {'ID': 2, 'DTHR_WEB': '20220518204522275', 'DTHR_APP': '20220513104701045'}
+        logger.warning(f'{lista[2]["DTHR_WEB"]=}')
+        logger.warning(f'{lista[2]["DTHR_WEB"]=}') 
+        logger.warning(f'{lista.get(2)["DTHR_WEB"]=}') 
+        logger.warning(f'{lista.get(7)["DTHR_WEB"]=}') 
+        # logger.warning(f'{lista.get(10)["DTHR_WEB"]=}') 
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
