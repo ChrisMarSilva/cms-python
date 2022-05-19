@@ -4,6 +4,9 @@ import csv
 import time
 import datetime as dt
 import pytz
+import os
+from dynaconf import Dynaconf
+from dotenv import load_dotenv, find_dotenv
 import telebot
 import pandas as pd   
 import numpy as np
@@ -140,8 +143,9 @@ def send_msg_telegram(
         chat_text += f'<i><u>{dt.datetime.now(tz=pytz.timezone("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M:%S")}</u></i><br>'
         chat_text = chat_text.replace('<br>', '\n')
 
-        # token = '1238835452:AAGTATI9bldZfHtD2iMrvHiVztz9DguLHck'
-        token = '5126234178:AAHJFigJPJWOBt3KcsPdpO5z1bTsPIR2AGE'
+        settings = Dynaconf(load_dotenv=True, environments=True, envvar_prefix="CMS_TNB")
+        token = settings.TELEGRAM_TOKEN # os.getenv('TELEGRAM_TOKEN')
+
         bot = telebot.TeleBot(token=token)
         try:
             bot.send_message(chat_id='452513294', text=chat_text, parse_mode="HTML", disable_web_page_preview=False)
