@@ -121,6 +121,18 @@ def get_collection_usuarios_comentario_alerta(db: pymongo.database.Database) -> 
     collection = db.usuarios_comentario_alerta
     return collection
 
+def get_collection_usuarios_nota_corretagem(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_nota_corretagem
+    return collection
+    
+def get_collection_usuarios_nota_corretagem_data(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_nota_corretagem_data
+    return collection
+    
+def get_collection_usuarios_nota_corretagem_oper(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_nota_corretagem_oper
+    return collection
+
 def get_collection_empresa_setor(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_setor
     return collection
@@ -196,7 +208,6 @@ def get_collection_empresa_finan_dre_tri(db: pymongo.database.Database) -> pymon
 def get_collection_empresa_finan_dre_ano(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_finan_dre_ano
     return collection
-
 
 def teste_performace_pessoa(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
@@ -373,6 +384,25 @@ def migrar_usuario(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
         #         {'$limit': qtde_por_pagina},
         #     ]
         # )
+        
+        # rows = collection.aggregate(
+        #     [
+        #         {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'L'}}], 'as': 'LOG_WEB'}},
+        #         {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'P'}}], 'as': 'LOG_APP'}}, 
+        #         # {'$match': {'ID': id_usuario, 'SITUACAO': situaco}},
+        #         {'$project': {'_id' : 0, 'ID' : 1, 'NOME' : 1, 'EMAIL' : 1, 'DTHR_WEB': {'$max': '$LOG_WEB.DATAHORA'}, 'DTHR_APP': {'$max': '$LOG_APP.DATAHORA'}}}, 
+        #         # {'$sort': {"NOME": -1}},
+        #     ]
+        # )
+
+        # lista = {row['ID']: {'DTHR_WEB': row['DTHR_WEB'] if row['DTHR_WEB'] else '', 'DTHR_APP': row['DTHR_APP'] if row['DTHR_APP'] else ''}  for row in rows if row['ID'] == 2 or row['ID'] == 7}
+
+        # for row in lista:  # rows
+        #     logger.warning(f'{row=}') 
+            # logger.warning(f'{row["ID"]=} - {row["NOME"]=} - {row["EMAIL"]=} - {row["DTHR_WEB"]=} - {row["DTHR_APP"]=}') 
+
+        # logger.warning(f'{lista[2]["DTHR_WEB"]=}')
+        # logger.warning(f'{lista.get(2)["DTHR_WEB"]=}') 
 
         # for idx, row in enumerate(rows):
         #     logger.warning(f"  -> {row}")
@@ -780,6 +810,169 @@ def migrar_usuario_comentario_ajustar_id(mongo_uri: str, mysql_host: str, mysql_
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
+def migrar_usuario_nota_corretagem(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_nota_corretagem(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT ID, IDUSUARIO, IDCORRETORA, NMARQUIVO, PATHARQUIVO, DTIMPORTACAO, DTHRREGISTRO, DTHRALTERACAO, SITUACAO FROM TBNOTA_CORRETAGEM ORDER BY ID")
+                result = cursor.fetchall()
+                lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING), ('IDCORRETORA', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('NMARQUIVO', pymongo.ASCENDING)])
+            collection.create_index('SITUACAO')
+            collection.create_index([('_id', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+
+
+        # collection_nota_corretagem      = get_collection_usuarios_nota_corretagem(db=db)
+        # collection_nota_corretagem_data = get_collection_usuarios_nota_corretagem_data(db=db)
+        # collection_nota_corretagem_oper = get_collection_usuarios_nota_corretagem_oper(db=db)
+
+        # id_usuario = 2  # 2-CMS
+        # id_corretora = 3  # 3-MODAL
+        # dt_ini     = '20220313'
+        # dt_fim     = '20220314'
+
+        # filters = {'IDUSUARIO': id_usuario, 'DTIMPORTACAO': {'$gte': dt_ini, '$lte': dt_fim}}
+        # filters['IDCORRETORA'] = id_corretora
+        # logger.warning(f"{filters=}")
+
+        # rows = collection_nota_corretagem.find(filters).sort([["DTIMPORTACAO", -1], ["_id", -1]])
+
+        # rows = collection_nota_corretagem.aggregate(
+        #     [
+        #         {'$lookup': {'from': 'usuarios_nota_corretagem_oper', 'localField': '_id', 'foreignField': 'IDNOTACORRETAGEM', 'as': 'OPER' }}, 
+        #         #{'$match': {'_id': ObjectId('6286cc3faccb811332432e30')}},
+        #         {'$match': filters},
+        #         {'$project': {'_id' : 1, 'IDUSUARIO' : 1, 'IDCORRETORA' : 1, 'NMARQUIVO' : 1, 'DTIMPORTACAO' : 1, 'DTHRREGISTRO' : 1, 'DTHRALTERACAO' : 1, 'SITUACAO' : 1, 'OPER': '$OPER.SITUACAO'}}, 
+        #         {'$sort': {"DTIMPORTACAO": -1, "_id": -1}},
+        #     ]
+        # )
+
+        # logger.warning(f"{rows.count()=}")
+
+        # for row in rows:
+        #     logger.warning(f"{row}")
+            # QTDE_OPER_IMPORT = len(row['OPER'])
+            # QTDE_OPER_PEND = len([item for item in row['OPER'] if str(item) == 'P'])
+            # QTDE_OPER_ADD = len([item for item in row['OPER'] if str(item) == 'A'])
+            # QTDE_OPER_CONF = len([item for item in row['OPER'] if str(item) == 'F'])
+            # logger.warning(f"{row['_id']} - {row['NMARQUIVO']} - {row['DTHRREGISTRO']} - {row['DTHRALTERACAO']} - {row['SITUACAO']} - {QTDE_OPER_IMPORT=} - {QTDE_OPER_PEND=} - {QTDE_OPER_ADD=} - {QTDE_OPER_CONF=}")
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_nota_corretagem_data(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_nota_corretagem_data(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT ID, IDNOTACORRETAGEM, DTNOTA, QTDOPER, VLRLIQUIDOOPERACAO, VLRTXLIQUIDACAO, VLRTXEMOLUMENTOS, VLRTXCORRETAGEM, VLRTXISS, VLRTXIRRF, VLRTXOUTRAS, VLRTXTOTAL, VLRLIQUIDOTOTAL, DTHRREGISTRO, DTHRALTERACAO, SITUACAO FROM TBNOTA_CORRETAGEM_DATA ORDER BY ID")
+                result = cursor.fetchall()
+                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('IDNOTACORRETAGEM')
+            collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_nota_corretagem_oper(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_nota_corretagem_oper(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT ID, IDNOTACORRETAGEM, IDATIVO, TPATIVO, CODIGO, DATA, TIPO, QUANT, VLRPRECO, VLRPRECOTOTAL, VLRTXLIQUIDACAO, VLRTXEMOLUMENTOS, VLRTXCORRETAGEM, VLRTXISS, VLRTXIRRF, VLRTXOUTRAS, VLRTXTOTAL, VLRTOTAL, DTHRREGISTRO, DTHRALTERACAO, SITUACAO FROM TBNOTA_CORRETAGEM_OPER ORDER BY ID")
+                result = cursor.fetchall()
+                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('IDNOTACORRETAGEM')
+            collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_nota_corretagem_ajustar_id(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db     = get_database(client=client)
+
+        collection_nota_corretagem      = get_collection_usuarios_nota_corretagem(db=db)
+        collection_nota_corretagem_data = get_collection_usuarios_nota_corretagem_data(db=db)
+        collection_nota_corretagem_oper = get_collection_usuarios_nota_corretagem_oper(db=db)
+
+        notas = collection_nota_corretagem.find({}) 
+
+        for nota in notas:
+            try:
+
+                id_nota_novo   = ObjectId(nota['_id'])
+                id_nota_antigo = nota['ID']
+                # logger.warning(f"notas -> {id_nota_novo} - {id_nota_antigo}")
+
+                collection_nota_corretagem_data.update_many({'IDNOTACORRETAGEM': id_nota_antigo}, {"$set": {"IDNOTACORRETAGEM": id_nota_novo}})
+                collection_nota_corretagem_oper.update_many({'IDNOTACORRETAGEM': id_nota_antigo}, {"$set": {"IDNOTACORRETAGEM": id_nota_novo}})
+
+            except Exception as e:
+                logger.error(f'Falha Geral(main): "{str(e)}"')
+
+        collection_nota_corretagem.update_many({}, {'$unset': {'ID': ""}})
+        collection_nota_corretagem_data.update_many({}, {'$unset': {'ID': ""}})
+        collection_nota_corretagem_oper.update_many({}, {'$unset': {'ID': ""}})
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+
 def  migrar_empresa_setor(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
@@ -798,7 +991,6 @@ def  migrar_empresa_setor(mongo_uri: str, mysql_host: str, mysql_user: str, mysq
                 lista = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
 
-
         if lista: collection.insert_many(lista)
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
@@ -806,6 +998,112 @@ def  migrar_empresa_setor(mongo_uri: str, mysql_host: str, mysql_user: str, mysq
         if lista:
             collection.create_index('ID')
             collection.create_index('DESCRICAO')
+
+
+        # Teste #1
+        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na collection separadas
+        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na collection separadas
+
+        # collection = get_collection_empresa_acao(db=db)
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.06s - 0:00:00.064183
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.002964
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # collection = get_collection_empresa_fii(db=db)
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.04s - 0:00:00.039146
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003097
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # collection = get_collection_empresa_etf(db=db)
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'FUNDO': 'TREND OURO'})  # Done in 0.06s - 0:00:00.058358
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'XMAL11'}) #  Done in 0.01s - 0:00:00.007785
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # collection = get_collection_empresa_bdr(db=db)
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.06s - 0:00:00.063479
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'S2TW34'}) #  Done in 0.00s - 0:00:00.002934
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # collection = get_collection_empresa_cripto(db=db)
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'Polkadot'})  #  Done in 0.05s - 0:00:00.051656
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) #  Done in 0.00s - 0:00:00.002523
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # Teste #2
+        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na mesma collection
+        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na mesma collection
+
+        # collection = get_collection_empresa(db=db)
+
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.05s - 0:00:00.045878
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.003023
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.05s - 0:00:00.051927
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003667
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'TREND OURO'})  # Done in 0.07s - 0:00:00.070177
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'XMAL11'}) # Done in 0.01s - 0:00:00.005180
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.05s - 0:00:00.051732
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'S2TW34'}) # Done in 0.02s - 0:00:00.015949
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'NOME': 'Polkadot'})  # Done in 0.04s - 0:00:00.041101
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) # Done in 0.00s - 0:00:00.003383
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -1452,7 +1750,7 @@ def main():
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
 
-        # Ok DigitalOcean
+        # DigitalOcean
 
         # migrar_noticia(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_admin_log_erros(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -1466,6 +1764,10 @@ def main():
         # migrar_usuario_comentario_denuncia(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_comentario_alerta(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_comentario_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_nota_corretagem(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_nota_corretagem_data(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_nota_corretagem_oper(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_nota_corretagem_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_finan(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_finan_agenda(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_finan_bpa_tri(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -1480,7 +1782,7 @@ def main():
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
 
-        # Ok Localhost
+        # Localhost
 
         # migrar_empresa_setor(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_subsetor(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -1492,185 +1794,21 @@ def main():
         # migrar_empresa_bdr(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_cripto(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
 
-
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
 
-        # Ok Desenv
+        # Desenv
 
-        client     = get_client(mongo_uri=mongo_uri)
-        db         = get_database(client=client)
-        # collection = get_collection_usuarios(db=db)
-        # collection = get_collection_usuarios_log(db=db)
-        # collection = get_collection_usuarios_comentario(db=db)
-        # collection = get_collection_usuarios_comentario_reacao(db=db)
-        # collection = get_collection_usuarios_comentario_denuncia(db=db)
-        # collection = get_collection_usuarios_comentario_alerta(db=db)
-        # collection = get_collection_empresa_setor(db=db)
-        # collection = get_collection_empresa_subsetor(db=db)
-        # collection = get_collection_empresa_segmento(db=db)
-        # collection = get_collection_empresa(db=db)
-        # collection = get_collection_empresa_acao(db=db)
-        # collection = get_collection_empresa_fii(db=db)
-        # collection = get_collection_empresa_etf(db=db)
-        # collection = get_collection_empresa_bdr(db=db)
-        # collection = get_collection_empresa_cripto(db=db)
+        client = get_client(mongo_uri=mongo_uri)
+        db     = get_database(client=client)
 
-        # id_usuario = 2  # 2-CMS
-        # tipo_usuario = 'A'   # I-Investidor  # A-Administrador
+        # id_usuario    = 2  # 2-CMS
+        # id_corretora  = 3  # 3-MODAL
+        # dt_ini        = '20220201'
+        # dt_fim        = '20220519'
+        # tipo_usuario  = 'A'   # I-Investidor  # A-Administrador
         # id_comentario = 784  # 784 # 796 # 800
-        # #  uuid.uuid1()  # uuid.uuid4()  # uuid.uuid4().hex  # uuid.uuid4()  # UUID = uuid.uuid1()  UUID.int
-
-        # Teste #1
-        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na collection separadas
-        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na collection separadas
-
-        # collection = get_collection_empresa_acao(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.06s - 0:00:00.064183
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.002964
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_fii(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.04s - 0:00:00.039146
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003097
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_etf(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'FUNDO': 'TREND OURO'})  # Done in 0.06s - 0:00:00.058358
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'XMAL11'}) #  Done in 0.01s - 0:00:00.007785
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_bdr(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.06s - 0:00:00.063479
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'S2TW34'}) #  Done in 0.00s - 0:00:00.002934
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_cripto(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'Polkadot'})  #  Done in 0.05s - 0:00:00.051656
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) #  Done in 0.00s - 0:00:00.002523
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # Teste #2
-        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na mesma collection
-        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na mesma collection
-
-        # collection = get_collection_empresa(db=db)
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.05s - 0:00:00.045878
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.003023
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.05s - 0:00:00.051927
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003667
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'TREND OURO'})  # Done in 0.07s - 0:00:00.070177
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'XMAL11'}) # Done in 0.01s - 0:00:00.005180
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.05s - 0:00:00.051732
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'S2TW34'}) # Done in 0.02s - 0:00:00.015949
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'Polkadot'})  # Done in 0.04s - 0:00:00.041101
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) # Done in 0.00s - 0:00:00.003383
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # ----------------------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------------------
-
-        collection = get_collection_usuarios(db=db)
-        # collection = get_collection_usuarios_log(db=db)
-
-        id_usuario = 2  # 2-CMS
-        situaco = "A"  # A-Ativo
-        # situaco = "L"  # L-xxxx
-        # situaco = "P"  # P-Aguardando Confirmação de Email
-        # situaco = "I"  # I-Inativo
-        # dt_ini = "20220518" + "000000000"
-        # dt_fim = ""  # "20220518" + "235959000"
-
-        # rows = collection.find({'SITUACAO': situaco})
-        # rows = collection.find({})
-
-        rows = collection.aggregate(
-            [
-                {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'L'}}], 'as': 'LOG_WEB'}},
-                {'$lookup': {'from': 'usuarios_log', 'localField': 'ID', 'foreignField': 'IDUSUARIO', 'pipeline': [{'$match': {'SITUACAO': 'P'}}], 'as': 'LOG_APP'}}, 
-                # {'$match': {'ID': id_usuario, 'SITUACAO': situaco}},
-                {'$project': {'_id' : 0, 'ID' : 1, 'NOME' : 1, 'EMAIL' : 1, 'DTHR_WEB': {'$max': '$LOG_WEB.DATAHORA'}, 'DTHR_APP': {'$max': '$LOG_APP.DATAHORA'}}}, 
-                # {'$sort': {"NOME": -1}},
-            ]
-        )
-
-        lista = {row['ID']: {'DTHR_WEB': row['DTHR_WEB'] if row['DTHR_WEB'] else '', 'DTHR_APP': row['DTHR_APP'] if row['DTHR_APP'] else ''}  for row in rows if row['ID'] == 2 or row['ID'] == 7}
-
-        # {k: v for v, k in enumerate(lst)}
-
-        for row in lista:  # rows
-            logger.warning(f'{row=}') 
-            # logger.warning(f'{row["ID"]=} - {row["NOME"]=} - {row["EMAIL"]=} - {row["DTHR_WEB"]=} - {row["DTHR_APP"]=}') 
-
-        logger.info(f'PESQUISA') 
-        logger.warning(f'{lista=}') 
-        # lista = {}
-        # lista[2] = {'ID': 2, 'DTHR_WEB': '20220518204522275', 'DTHR_APP': '20220513104701045'}
-        # lista[11] = {'ID': 2, 'DTHR_WEB': '20220518204522275', 'DTHR_APP': '20220513104701045'}
-        logger.warning(f'{lista[2]["DTHR_WEB"]=}')
-        logger.warning(f'{lista[2]["DTHR_WEB"]=}') 
-        logger.warning(f'{lista.get(2)["DTHR_WEB"]=}') 
-        logger.warning(f'{lista.get(7)["DTHR_WEB"]=}') 
-        # logger.warning(f'{lista.get(10)["DTHR_WEB"]=}') 
+        # uuid.uuid1()  # uuid.uuid4()  # uuid.uuid4().hex  # uuid.uuid4()  # UUID = uuid.uuid1()  UUID.int
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
