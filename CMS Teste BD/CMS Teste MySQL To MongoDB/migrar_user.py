@@ -19,7 +19,7 @@ def migrar_usuario(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
         with connection:
             with connection.cursor() as cursor:
 
-                cursor.execute("SELECT ID, NOME, EMAIL, SENHA, DTREGISTRO, TENTATIVA, TIPO, SITUACAO, FOTO, CHATID FROM TBUSUARIO ORDER BY ID")
+                cursor.execute("SELECT ID, NOME, EMAIL, SENHA, DTREGISTRO, TENTATIVA, TIPO, SITUACAO, FOTO, CHATID, HASH FROM TBUSUARIO ORDER BY ID")
                 result = cursor.fetchall()
                 lista = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
