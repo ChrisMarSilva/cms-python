@@ -61,7 +61,7 @@ def migrar_noticia(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
-def migrar_admin_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+def migrar_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
         client = get_client(mongo_uri=mongo_uri)

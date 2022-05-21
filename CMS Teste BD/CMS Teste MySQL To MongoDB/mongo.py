@@ -206,6 +206,10 @@ def get_collection_empresa_finan_dre_ano(db: pymongo.database.Database) -> pymon
     collection = db.empresa_finan_dre_ano
     return collection
 
+def get_collection_empresa_cotacoes(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_cotacoes
+    return collection
+
 def get_collection_admin_log_erros(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.admin_log_erros 
     return collection

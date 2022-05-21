@@ -767,7 +767,158 @@ def migrar_empresa_finan_dre_ano(mongo_uri: str, mysql_host: str, mysql_user: st
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
-def migrar_admin_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+def migrar_empresa_cotacoes(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_empresa_cotacoes(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                #  ACAO
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBEMPRESA_ATIVOCOTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - ACAO = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=} - {tabela['TABLE_NAME'].replace('TBEMPRESA_ATIVOCOTACAO_', '')=}") 
+                    cursor.execute(f"SELECT 'ACAO' as CATEGORIA, '{tabela['TABLE_NAME'].replace('TBEMPRESA_ATIVOCOTACAO_', '')}' as CODIGO, DATA, COTACAO, VARIACAO FROM {tabela['TABLE_NAME']} ORDER BY DATA")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+                logger.info(f"Total MySQL - ACAO = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                #  FII
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBFII_FUNDOIMOB_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - FII = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=} - {tabela['TABLE_NAME'].replace('TBFII_FUNDOIMOB_COTACAO_', '')=}") 
+                    cursor.execute(f"SELECT 'FII' as CATEGORIA, '{tabela['TABLE_NAME'].replace('TBFII_FUNDOIMOB_COTACAO_', '')}' as CODIGO, DATA, COTACAO, VARIACAO FROM {tabela['TABLE_NAME']} ORDER BY DATA")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+                logger.info(f"Total MySQL - FII = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                #  ETF
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBETF_INDICE_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - ETF = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=} - {tabela['TABLE_NAME'].replace('TBETF_INDICE_COTACAO_', '')=}") 
+                    cursor.execute(f"SELECT 'ETF' as CATEGORIA, '{tabela['TABLE_NAME'].replace('TBETF_INDICE_COTACAO_', '')}' as CODIGO, DATA, COTACAO, VARIACAO FROM {tabela['TABLE_NAME']} ORDER BY DATA")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+                logger.info(f"Total MySQL - ETF = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                #  BDR
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TTBBDR_EMPRESA_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - BDR = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=} - {tabela['TABLE_NAME'].replace('TTBBDR_EMPRESA_COTACAO_', '')=}") 
+                    cursor.execute(f"SELECT 'BDR' as CATEGORIA, '{tabela['TABLE_NAME'].replace('TTBBDR_EMPRESA_COTACAO_', '')}' as CODIGO, DATA, COTACAO, VARIACAO FROM {tabela['TABLE_NAME']} ORDER BY DATA")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+                logger.info(f"Total MySQL - BDR = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('CODIGO')
+            collection.create_index([('CODIGO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+
+        # collection = get_collection_empresa_cotacoes(db=db)
+        # collection.delete_many({'CATEGORIA': 'ACAO', 'CODIGO': 'ITSA4'})
+        # rows = collection.find({'CATEGORIA': 'ACAO', 'CODIGO': 'ITSA4', 'DATA': '20220405'})
+        # rows = collection.find({'CATEGORIA': 'CRIPTO', 'CODIGO': 'ADA/BRL', 'DATA': '20220521'}).limit(10)
+        # rows = collection.find({'CATEGORIA': 'ACAO', 'CODIGO': 'ITSA4', 'DATA': {'$gte': '20220221', '$lte': '20220521'}}).sort('DATA', 1)
+        # row = collection.find({'CATEGORIA': 'ACAO', 'CODIGO': 'ITSA4', 'DATA': {'$gte': '20220221', '$lte': '20220521'}}).sort('COTACAO', -1).limit(1)  # max
+        # row = collection.find_one(filter={'CATEGORIA': 'ACAO', 'CODIGO': 'ITSA4', 'DATA': {'$gte': '20220221', '$lte': '20220521'}}, sort=[("DATA", -1)], limit=1)  # max
+        # logger.warning(f'{row}')
+        # for row in rows:
+        #     logger.warning(f'{row}') 
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_empresa_cotacoes_drop_table(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                #  ACAO
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBEMPRESA_ATIVOCOTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - ACAO = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  FII
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBFII_FUNDOIMOB_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - FII = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  ETF
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBETF_INDICE_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - ETF = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  BDR
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TTBBDR_EMPRESA_COTACAO_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - BDR = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_empresa_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
         client = get_client(mongo_uri=mongo_uri)
