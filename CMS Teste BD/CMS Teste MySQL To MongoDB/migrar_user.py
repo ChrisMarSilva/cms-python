@@ -790,6 +790,154 @@ def migrar_usuario_carteira_projecao_ajustar_id(mongo_uri: str, mysql_host: str,
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
+def migrar_usuario_cei(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_cei(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT ID, IDUSUARIO, CPF, SENHA, DTHRREGISTRO, DTHRALTERACAO, TIPO, SITUACAO FROM TBCEI ORDER BY ID")
+                result = cursor.fetchall()
+                lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('IDUSUARIO')
+
+        # collection_cei      = get_collection_usuarios_cei(db=db)
+        # collection_cei_oper = get_collection_usuarios_cei_oper(db=db)
+        # collection_cei_prov = get_collection_usuarios_cei_prov(db=db)
+
+        # rows = collection_cei_oper.find({'IDUSUARIO': 2}).sort("CODIGO", 1).distinct('CODIGO')
+        # rows = collection_cei_oper.distinct('CODIGO', {'IDUSUARIO': 2})
+        # lista = [[str(row['CODIGO']), str(row['CODIGO']), str(row['CODIGO'])] for row in rows]
+
+        # for row in rows:
+        #     logger.warning(f"{row}")
+            # logger.warning(f"{row['CODIGO']}")
+
+        # lista = [[str(row), str(row), str(row)] for row in rows]
+        # logger.warning(f"{lista}")
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_cei_oper(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_cei_oper(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBCEI_OPER%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=}") 
+                    cursor.execute(f"SELECT ID, IDUSUARIO, CATEGORIA, DATA, TIPO, CODIGO, QUANT, PRECO, TOTAL, CORRET_ID, CORRET_NOME, CORRET_CONTA, SITUACAO FROM {tabela['TABLE_NAME']} ORDER BY ID")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+
+        logger.info(f"Total MySQL = {len(lista)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('IDUSUARIO')
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_cei_prov(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_cei_prov(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBCEI_PROV%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas = {len(tabelas)}") 
+
+                lista = []
+                for tabela in tabelas:
+                    # logger.info(f"{tabela['TABLE_NAME']=}") 
+                    cursor.execute(f"SELECT ID, IDUSUARIO, CATEGORIA, CODIGO, DATA_PAGTO, TIPO, QUANT, TOTAL_BRUTO, TOTAL_LIQUIDO, CORRET_ID, CORRET_NOME, CORRET_CONTA, SITUACAO FROM {tabela['TABLE_NAME']} ORDER BY ID")
+                    result = cursor.fetchall()
+                    lista += [convert_decimal(row) for row in result]  # lista = [row for row in result]
+
+        logger.info(f"Total MySQL = {len(lista)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        if lista:
+            collection.create_index('IDUSUARIO')
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_cei_ajustar_id(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db     = get_database(client=client)
+
+        collection_cei      = get_collection_usuarios_cei(db=db)
+        collection_cei_oper = get_collection_usuarios_cei_oper(db=db)
+        collection_cei_prov = get_collection_usuarios_cei_prov(db=db)
+
+        collection_cei.update_many({}, {'$unset': {'ID': ""}})
+        collection_cei_oper.update_many({}, {'$unset': {'ID': ""}})
+        collection_cei_prov.update_many({}, {'$unset': {'ID': ""}})
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
 def migrar_usuario_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
@@ -805,7 +953,7 @@ def migrar_usuario_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, my
 
                 cursor.execute("SELECT xxxxxxx FROM xxxxxxxx ORDER BY xxxxxxxxx")
                 result = cursor.fetchall()
-                lista = [row for row in result] 
+                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
 
         if lista: collection.insert_many(lista)

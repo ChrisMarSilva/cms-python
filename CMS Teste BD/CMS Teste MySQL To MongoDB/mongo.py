@@ -118,6 +118,18 @@ def get_collection_usuarios_carteira_projecao_item(db: pymongo.database.Database
     collection = db.usuarios_carteira_projecao_item
     return collection
 
+def get_collection_usuarios_cei(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_cei
+    return collection
+    
+def get_collection_usuarios_cei_oper(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_cei_oper
+    return collection
+    
+def get_collection_usuarios_cei_prov(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_cei_prov
+    return collection
+
 def get_collection_empresa_setor(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_setor
     return collection
