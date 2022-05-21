@@ -95,7 +95,7 @@ def teste_pymongo_schema_validations(db: pymongo.database.Database) -> None:
 
 def teste_pymongo_create_index(posts: pymongo.collection.Collection) -> None:
     logger.info(f'Teste Create Index')
-    result = posts.create_index('author')
+    result = posts.create_index('author')  
     # result = posts.create_index([('_id', pymongo.ASCENDING)], unique=True)
     # result = posts.create_index([("mike", pymongo.DESCENDING), ("eliot", pymongo.ASCENDING)])
     logger.info(f'{result=}')  # result='author_1'
