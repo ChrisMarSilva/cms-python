@@ -63,6 +63,11 @@ def migrar_admin_fatos(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_p
             collection.create_index('DTFATO')
             collection.create_index([('DTFATO', pymongo.ASCENDING), ('DTHRREGISTRO', pymongo.ASCENDING)])
 
+        # collection = get_collection_admin_fatos(db=db)
+        # rows = collection.find({'SITUACAO': {"$in": ['P', 'E']}, 'QTDPROC': {"$lt": 3}}).sort("DTFATO", -1)
+        # lista = [{'ID': str(row['_id']), 'DTFATO': str(row['DTFATO']), 'IDFATOINI': int(row['IDFATOINI']), 'IDFATOFIM': int(row['IDFATOFIM'])} for row in rows]
+        # logger.info(f'lista={len(lista)=}')
+
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
 
