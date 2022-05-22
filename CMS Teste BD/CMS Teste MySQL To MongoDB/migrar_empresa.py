@@ -862,6 +862,20 @@ def migrar_empresa_cotacoes(mongo_uri: str, mysql_host: str, mysql_user: str, my
         # logger.warning(f'{row}')
         # for row in rows:
         #     logger.warning(f'{row}') 
+        
+        # Localhost
+        # ACAO = 1.791.632 - 506 TABELAS
+        # FII =    232.442 - 207 TABELAS
+        # ETF =     37.003 -  21 TABELAS
+        # BDR =    393.277 - 726 TABELAS
+        # MondoDB = 2.454.354 - 00:03:41.709630
+
+        # DigitalOcean
+        # ACAO = 1809466 - 559 TABELAS
+        # FII =    252141 - 283 TABELAS
+        # ETF =     40582 -  62 TABELAS
+        # BDR =    549567 - 811 TABELAS
+        # MondoDB = 2651756 - 0:11:09.824658
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

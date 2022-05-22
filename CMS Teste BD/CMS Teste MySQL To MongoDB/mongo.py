@@ -2,6 +2,7 @@ import pymongo
 from pymongo import MongoClient
 from decimal import Decimal
 from bson.decimal128 import Decimal128
+from pymongo import MongoClient, ASCENDING, DESCENDING
 import numpy as np
 
 
