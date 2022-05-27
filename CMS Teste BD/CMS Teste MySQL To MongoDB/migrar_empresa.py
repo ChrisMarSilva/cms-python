@@ -5,20 +5,20 @@ from mysql import get_connection_mysql
 from mongo import *
 
 
-def  migrar_empresa_setor(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+def  migrar_empresa_admin(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
         client = get_client(mongo_uri=mongo_uri)
         db = get_database(client=client)
 
-        collection = get_collection_empresa_setor(db=db)
+        collection = get_collection_empresa_admin(db=db)
         collection.delete_many({})
 
         connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         with connection:
             with connection.cursor() as cursor:
 
-                cursor.execute(" SELECT ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SETOR ORDER BY ID ")
+                cursor.execute(" SELECT 'FII' CATEGORIA, ID, NOME, CNPJ, SITUACAO FROM TBFII_FUNDOIMOB_ADMIN ORDER BY ID ")
                 result = cursor.fetchall()
                 lista = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
@@ -28,174 +28,79 @@ def  migrar_empresa_setor(mongo_uri: str, mysql_host: str, mysql_user: str, mysq
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
         if lista:
-            collection.create_index('ID')
-            collection.create_index('DESCRICAO')
-
-
-        # Teste #1
-        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na collection separadas
-        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na collection separadas
-
-        # collection = get_collection_empresa_acao(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.06s - 0:00:00.064183
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.002964
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_fii(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.04s - 0:00:00.039146
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003097
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_etf(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'FUNDO': 'TREND OURO'})  # Done in 0.06s - 0:00:00.058358
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'XMAL11'}) #  Done in 0.01s - 0:00:00.007785
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_bdr(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.06s - 0:00:00.063479
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'S2TW34'}) #  Done in 0.00s - 0:00:00.002934
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # collection = get_collection_empresa_cripto(db=db)
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'Polkadot'})  #  Done in 0.05s - 0:00:00.051656
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) #  Done in 0.00s - 0:00:00.002523
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # Teste #2
-        # Pesquisar nome   acao 'RAIZEN', fii 'FII HAZ', etf 'TREND OURO', bdr 'BKR US TREAS', cripto 'Polkadot' - na mesma collection
-        # Pesquisar codigo acao 'MOSI3',  fii 'FLMA11',  etf 'XMAL11',     bdr 'S2TW34',       cripto 'SOL/BRL'  - na mesma collection
-
-        # collection = get_collection_empresa(db=db)
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'RAIZEN'})  # Done in 0.05s - 0:00:00.045878
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.003023
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'FII HAZ'})  # Done in 0.05s - 0:00:00.051927
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003667
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'TREND OURO'})  # Done in 0.07s - 0:00:00.070177
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'XMAL11'}) # Done in 0.01s - 0:00:00.005180
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'BKR US TREAS'})  # Done in 0.05s - 0:00:00.051732
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'S2TW34'}) # Done in 0.02s - 0:00:00.015949
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
-
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'NOME': 'Polkadot'})  # Done in 0.04s - 0:00:00.041101
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}') 
-        # start_time_teste = time.perf_counter() 
-        # result = collection.find_one({'CODIGO': 'SOL/BRL'}) # Done in 0.00s - 0:00:00.003383
-        # end_time_teste = time.perf_counter() - start_time_teste
-        # logger.warning(f'{result["ID"]} - {result["CODIGO"]} - {result["NOME"]} - Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)}')
+            collection.create_index('CATEGORIA')
+            collection.create_index('NOME')
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('ID', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('NOME', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
-def migrar_empresa_subsetor(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+def  migrar_empresa_setores(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
         client = get_client(mongo_uri=mongo_uri)
         db = get_database(client=client)
 
-        collection = get_collection_empresa_subsetor(db=db)
+        collection = get_collection_empresa_setores(db=db)
         collection.delete_many({})
 
         connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         with connection:
             with connection.cursor() as cursor:
 
-                cursor.execute(" SELECT ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SUBSETOR ORDER BY ID ")
+                cursor.execute(" SELECT 'ACAO' CATEGORIA, 'SETOR' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SETOR ORDER BY ID ")
                 result = cursor.fetchall()
-                lista = [row for row in result] 
-                logger.info(f"Total MySQL = {len(result)}") 
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - ACAO - SETOR = {len(lista)}") 
+                if lista: collection.insert_many(lista)
 
-        if lista: collection.insert_many(lista)
+                cursor.execute(" SELECT 'ACAO' CATEGORIA, 'SUBSETOR' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SUBSETOR ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - ACAO - SUBSETOR = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                cursor.execute(" SELECT 'ACAO' CATEGORIA, 'SEGMENTO' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SEGMENTO ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - ACAO - SEGMENTO = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                cursor.execute(" SELECT 'FII' CATEGORIA, 'TIPO' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBFII_FUNDOIMOB_TIPO ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - FII - TIPO = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                cursor.execute(" SELECT 'BDR' CATEGORIA, 'SETOR' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBBDR_EMPRESA_SETOR ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - BDR - SETOR = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                cursor.execute(" SELECT 'BDR' CATEGORIA, 'SUBSETOR' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBBDR_EMPRESA_SUBSETOR ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - BDR - SUBSETOR = {len(lista)}") 
+                if lista: collection.insert_many(lista)
+
+                cursor.execute(" SELECT 'BDR' CATEGORIA, 'SEGMENTO' AS TIPO, ID, DESCRICAO, SITUACAO FROM TBBDR_EMPRESA_SEGMENTO ORDER BY ID ")
+                result = cursor.fetchall()
+                lista = [row for row in result]
+                logger.info(f"Total MySQL - BDR - SEGMENTO = {len(lista)}") 
+                if lista: collection.insert_many(lista)
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
         if lista:
-            collection.create_index('ID')
-            collection.create_index('DESCRICAO')
-
-    except Exception as e:
-        logger.error(f'Falha Geral: "{str(e)}"')
-
-
-def migrar_empresa_segmento(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
-    try:
-
-        client = get_client(mongo_uri=mongo_uri)
-        db = get_database(client=client)
-
-        collection = get_collection_empresa_segmento(db=db)
-        collection.delete_many({})
-
-        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        with connection:
-            with connection.cursor() as cursor:
-
-                cursor.execute(" SELECT ID, DESCRICAO, SITUACAO FROM TBEMPRESA_SEGMENTO ORDER BY ID ")
-                result = cursor.fetchall()
-                lista = [row for row in result] 
-                logger.info(f"Total MySQL = {len(result)}") 
-
-        if lista: collection.insert_many(lista)
-
-        logger.info(f"Total MondoDB = {collection.count_documents({})}")
-
-        if lista:
-            collection.create_index('ID')
-            collection.create_index('DESCRICAO')
+            collection.create_index('CATEGORIA')
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('ID', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('DESCRICAO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('DESCRICAO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -215,15 +120,15 @@ def migrar_empresa(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
             with connection.cursor() as cursor:
 
                 query = """
-                    SELECT E.ID, E.NOMRESUMIDO AS NOME, E.RAZAOSOCIAL, E.CNPJ, E.CODCVM, A.CODIGO, A.CODISIN, A.TIPO, E.SITUACAO, 'ACAO' AS CATEGORIA, A.VLRPRECOFECHAMENTO, A.VLRPRECOANTERIOR, A.VLRVARIACAO, A.DATAHORAALTERACO FROM TBEMPRESA E JOIN TBEMPRESA_ATIVO A ON (A.IDEMPRESA = E.ID)
+                    SELECT 'ACAO'   CATEGORIA, A.ID AS IDATIVO, A.CODIGO,     A.TIPO,     A.CODISIN, A.VLRPRECOFECHAMENTO, A.VLRPRECOANTERIOR, A.VLRVARIACAO, A.DATAHORAALTERACO, A.SITUACAO AS SITUACAOATIVO, E.ID AS IDEMPRESA, E.NOME, E.NOMRESUMIDO AS NOMERESUMIDO,         E.RAZAOSOCIAL,                      E.CNPJ,      E.CODCVM,     E.SITE,           E.TIPO_MERCADO,       E.IDSETOR, IFNULL(ST.DESCRICAO, 'Não Classificados') AS NMSETOR,       E.IDSUBSETOR, IFNULL(SB.DESCRICAO, 'Não Classificados') AS NMSUBSETOR,       E.IDSEGMENTO, IFNULL(SG.DESCRICAO, 'Não Classificados') AS NMSEGMENTO, E.SITUACAO AS SITUACAOEMPRESA FROM TBEMPRESA E JOIN TBEMPRESA_ATIVO A ON (A.IDEMPRESA = E.ID) LEFT JOIN TBEMPRESA_SETOR ST ON (ST.ID = E.IDSETOR) LEFT JOIN TBEMPRESA_SUBSETOR SB ON (SB.ID = E.IDSUBSETOR) LEFT JOIN TBEMPRESA_SEGMENTO SG ON (SG.ID = E.IDSEGMENTO)
                     UNION ALL
-                    SELECT ID, NOME, RAZAOSOCIAL, CNPJ, '' AS CODCVM, CODIGO, CODISIN, '' AS TIPO, SITUACAO, 'FII' AS CATEGORIA, VLRPRECOFECHAMENTO, VLRPRECOANTERIOR, VLRVARIACAO, DATAHORAALTERACO FROM TBFII_FUNDOIMOB
+                    SELECT 'FII'    CATEGORIA, E.ID AS IDATIVO, E.CODIGO, '' AS TIPO,     E.CODISIN, E.VLRPRECOFECHAMENTO, E.VLRPRECOANTERIOR, E.VLRVARIACAO, E.DATAHORAALTERACO, E.SITUACAO AS SITUACAOATIVO, E.ID AS IDEMPRESA, E.NOME,        E.NOME AS NOMERESUMIDO,         E.RAZAOSOCIAL,                       E.CNPJ, '' AS CODCVM, '' AS SITE,    'FII' AS TIPO_MERCADO, NULL AS IDSETOR,        'FII' AS NMSETOR, NULL AS IDSUBSETOR,        'FII' AS NMSUBSETOR, NULL AS IDSEGMENTO,        'FII' AS NMSEGMENTO, E.SITUACAO AS SITUACAOEMPRESA FROM TBFII_FUNDOIMOB E
                     UNION ALL
-                    SELECT ID, FUNDO AS NOME, RAZAOSOCIAL, CNPJ, '' AS CODCVM, CODIGO, CODISIN, '' AS TIPO, SITUACAO, 'BETF' AS CATEGORIA, VLRPRECOFECHAMENTO, VLRPRECOANTERIOR, VLRVARIACAO, DATAHORAALTERACO FROM TBETF_INDICE
+                    SELECT 'ETF'    CATEGORIA, E.ID AS IDATIVO, E.CODIGO, '' AS TIPO,     E.CODISIN, E.VLRPRECOFECHAMENTO, E.VLRPRECOANTERIOR, E.VLRVARIACAO, E.DATAHORAALTERACO, E.SITUACAO AS SITUACAOATIVO, E.ID AS IDEMPRESA, E.NOME,       E.FUNDO AS NOMERESUMIDO,         E.RAZAOSOCIAL,                       E.CNPJ, '' AS CODCVM, '' AS SITE,    'ETF' AS TIPO_MERCADO, NULL AS IDSETOR,        'ETF' AS NMSETOR, NULL AS IDSUBSETOR,        'ETF' AS NMSUBSETOR, NULL AS IDSEGMENTO,        'ETF' AS NMSEGMENTO, E.SITUACAO AS SITUACAOEMPRESA FROM TBETF_INDICE E
                     UNION ALL
-                    SELECT ID, NOME, RAZAOSOCIAL, CNPJ, CODCVM, CODIGO, CODISIN, TIPO, SITUACAO, 'BDR' AS CATEGORIA, VLRPRECOFECHAMENTO, VLRPRECOANTERIOR, VLRVARIACAO, DATAHORAALTERACO FROM TBBDR_EMPRESA
+                    SELECT 'BDR'    CATEGORIA, E.ID AS IDATIVO, E.CODIGO,     E.TIPO,     E.CODISIN, E.VLRPRECOFECHAMENTO, E.VLRPRECOANTERIOR, E.VLRVARIACAO, E.DATAHORAALTERACO, E.SITUACAO AS SITUACAOATIVO, E.ID AS IDEMPRESA, E.NOME,        E.NOME AS NOMERESUMIDO,         E.RAZAOSOCIAL,                       E.CNPJ,     E.CODCVM, '' AS SITE,   E.TIPO AS TIPO_MERCADO,       E.IDSETOR, ST.DESCRICAO AS NMSETOR,       E.IDSUBSETOR, SB.DESCRICAO AS NMSUBSETOR,       E.IDSEGMENTO, SG.DESCRICAO AS NMSEGMENTO, E.SITUACAO AS SITUACAOEMPRESA FROM TBBDR_EMPRESA E JOIN TBBDR_EMPRESA_SETOR ST ON (ST.ID = E.IDSETOR) JOIN TBBDR_EMPRESA_SUBSETOR SB ON (SB.ID = E.IDSUBSETOR) JOIN TBBDR_EMPRESA_SEGMENTO SG ON (SG.ID = E.IDSEGMENTO)
                     UNION ALL
-                    SELECT ID, NOME, NOME AS RAZAOSOCIAL, '00.000.000/0000-00' AS CNPJ, '' AS CODCVM, CODIGO, '' AS CODISIN, '' AS TIPO, SITUACAO, 'CRIPTO' AS CATEGORIA, VLRPRECOFECHAMENTO, VLRPRECOANTERIOR, VLRVARIACAO, DATAHORAALTERACO FROM TBCRIPTO_EMPRESA
+                    SELECT 'CRIPTO' CATEGORIA, E.ID AS IDATIVO, E.CODIGO, '' AS TIPO, '' AS CODISIN, E.VLRPRECOFECHAMENTO, E.VLRPRECOANTERIOR, E.VLRVARIACAO, E.DATAHORAALTERACO, E.SITUACAO AS SITUACAOATIVO, E.ID AS IDEMPRESA, E.NOME,        E.NOME AS NOMERESUMIDO, E.NOME AS RAZAOSOCIAL, '00.000.000/0000-00' AS CNPJ, '' AS CODCVM, '' AS SITE, 'CRIPTO' AS TIPO_MERCADO, NULL AS IDSETOR,     'CRIPTO' AS NMSETOR, NULL AS IDSUBSETOR,     'CRIPTO' AS NMSUBSETOR, NULL AS IDSEGMENTO,     'CRIPTO' AS NMSEGMENTO, E.SITUACAO AS SITUACAOEMPRESA FROM TBCRIPTO_EMPRESA E
                     ORDER BY CATEGORIA, CODIGO
                 """
                 cursor.execute(query)
@@ -236,14 +141,86 @@ def migrar_empresa(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
         if lista:
-            collection.create_index('ID')
-            collection.create_index('NOME')
+            collection.create_index('CATEGORIA')
             collection.create_index('CODIGO')
             collection.create_index('CODISIN')
-            collection.create_index([('ID', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
-            collection.create_index([('ID', pymongo.ASCENDING), ('CODISIN', pymongo.ASCENDING)])
-            collection.create_index([('ID', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('ID', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+            collection.create_index('NOME')
+            collection.create_index('NOMERESUMIDO')
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODISIN', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('NOME', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('NOMERESUMIDO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING), ('SITUACAOATIVO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('SITUACAOATIVO', pymongo.ASCENDING)])
+            collection.create_index('SITUACAOATIVO')
+            collection.create_index([('SITUACAOATIVO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('SITUACAOEMPRESA', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('SITUACAOEMPRESA', pymongo.ASCENDING), ('NOMERESUMIDO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('SITUACAOEMPRESA', pymongo.ASCENDING), ('NOME', pymongo.ASCENDING)])
+
+        # collection = get_collection_empresa(db=db)
+
+        # # ACAO - NOME - RAIZEN
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'ACAO', 'NOME': 'RAIZEN'})  # Done in 0.06s - 0:00:00.064183
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["NOME"]}')
+
+        # # ACAO - CODIGO - MOSI3
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'ACAO', 'CODIGO': 'MOSI3'}) #  Done in 0.00s - 0:00:00.002964
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["CODIGO"]}')
+
+        # # FII - NOME - FII HAZ
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'FII', 'NOME': 'FII HAZ'})  # Done in 0.04s - 0:00:00.039146
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["NOME"]}')
+
+        # # FII - CODIGO - FLMA11
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'FII', 'CODIGO': 'FLMA11'}) #  Done in 0.00s - 0:00:00.003097
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["CODIGO"]}')
+
+        # # ETF - NOME - Trend ETF OURO Fundo de Índice
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'ETF', 'NOME': 'Trend ETF OURO Fundo de Índice'})  # Done in 0.06s - 0:00:00.058358
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["NOME"]}')
+
+        # # ETF - CODIGO - XMAL11
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'ETF', 'CODIGO': 'XMAL11'}) #  Done in 0.01s - 0:00:00.007785
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["CODIGO"]}')
+
+
+        # # BDR - NOME - BKR US TREAS
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'BDR', 'NOME': 'BKR US TREAS'})  # Done in 0.06s - 0:00:00.063479
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["NOME"]}')
+
+        # # BDR - CODIGO - S2TW34
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'BDR', 'CODIGO': 'S2TW34'}) #  Done in 0.00s - 0:00:00.002934
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["CODIGO"]}')
+
+        # # CRIPTO - NOME - Polkadot
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'CRIPTO', 'NOME': 'Polkadot'})  #  Done in 0.05s - 0:00:00.051656
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["NOME"]}')
+
+        # # CRIPTO - CODIGO - SOL/BRL
+        # start_time_teste = time.perf_counter() 
+        # result = collection.find_one({'CATEGORIA': 'CRIPTO', 'CODIGO': 'SOL/BRL'}) #  Done in 0.00s - 0:00:00.002523
+        # end_time_teste = time.perf_counter() - start_time_teste
+        # logger.warning(f'Done in {end_time_teste:.2f}s - {dt.timedelta(seconds=end_time_teste)} - {result["CATEGORIA"]} - {result["CODIGO"]}')
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -927,6 +904,108 @@ def migrar_empresa_cotacoes_drop_table(mongo_uri: str, mysql_host: str, mysql_us
 
                 for tabela in tabelas:
                     cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  CEI OPER
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBCEI_OPER_USER_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - CEI OPER = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  CEI PROV
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBCEI_PROV_USER_%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - CEI PROV = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+                #  EMPRESA FINAN
+
+                cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE 'TBEMPRESA_FINAN%' ORDER BY TABLE_NAME")
+                result = cursor.fetchall()
+                tabelas = [row for row in result] 
+                logger.info(f"Total Tabelas - EMPRESA FINAN = {len(tabelas)}") 
+
+                for tabela in tabelas:
+                    cursor.execute(f"DROP TABLE {tabela['TABLE_NAME']}")
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_empresa_fatos(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_empresa_fatos(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                query = """
+                    SELECT 'ACAO' CATEGORIA, F.ID AS IDFATO, F.IDEMPRESA, F.NMEMPRESA, F.DATA_ENV, F.DATA_REF, F.PROTOCOLO, F.LINK, F.ASSUNTO, F.CONTEUDO, F.SITUACAO FROM TBEMPRESA_FATORELEVANTE F
+                    UNION ALL
+                    SELECT 'FII' CATEGORIA, F.ID AS IDFATO, F.IDFUNDO AS IDEMPRESA, F.NMFUNDO AS NMEMPRESA, F.DATA_ENV, F.DATA_REF, F.PROTOCOLO, F.LINK, F.ASSUNTO, F.CONTEUDO, F.SITUACAO FROM TBFII_FUNDOIMOB_FATORELEVANTE F
+                    UNION ALL
+                    SELECT 'ETF' CATEGORIA, F.ID AS IDFATO, F.IDINDICE AS IDEMPRESA, F.NMINDICE AS NMEMPRESA, F.DATA_ENV, F.DATA_REF, F.PROTOCOLO, F.LINK, F.ASSUNTO, F.CONTEUDO, F.SITUACAO FROM TBETF_FATORELEVANTE F
+                    UNION ALL
+                    SELECT 'BDR' CATEGORIA, F.ID AS IDFATO, F.IDBDR AS IDEMPRESA, F.NMEMPRESA, F.DATA_ENV, F.DATA_REF, F.PROTOCOLO, F.LINK, F.ASSUNTO, F.CONTEUDO, F.SITUACAO FROM TBBDR_EMPRESA_FATORELEVANTE F
+                    ORDER BY CATEGORIA, IDFATO
+                """
+                cursor.execute(query)
+                result = cursor.fetchall()
+                lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        result_delete = collection.delete_many({'DATA_REF': {"$lt": '20220201'}})  # $lt <
+        logger.info(f"{result_delete.deleted_count=}")
+
+        if lista:
+            collection.create_index('CATEGORIA')
+            collection.create_index('LINK')
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDFATO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('LINK', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+            collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING), ('PROTOCOLO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_empresa_fatos_ajustar_protocolo(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection_empresa_fatos = get_collection_empresa_fatos(db=db)
+
+        fatos = collection_empresa_fatos.find({}) 
+        
+        total = fatos.count()
+        logger.warning(f'{total=}')
+
+        for fato in fatos:
+            try:
+                collection_empresa_fatos.update_many({"_id": ObjectId(fato['_id'])}, {"$set": {"PROTOCOLO": int(fato['PROTOCOLO'])}})
+            except Exception as e:
+                logger.error(f'Falha Geral: "{str(e)}"')
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

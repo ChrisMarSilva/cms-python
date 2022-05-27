@@ -908,13 +908,13 @@ def migrar_usuario_cei_prov(mongo_uri: str, mysql_host: str, mysql_user: str, my
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
-            collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+        collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -933,6 +933,103 @@ def migrar_usuario_cei_ajustar_id(mongo_uri: str, mysql_host: str, mysql_user: s
         collection_cei.update_many({}, {'$unset': {'ID': ""}})
         collection_cei_oper.update_many({}, {'$unset': {'ID': ""}})
         collection_cei_prov.update_many({}, {'$unset': {'ID': ""}})
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+        
+
+
+def migrar_usuario_empresa_fatos(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db     = get_database(client=client)
+
+        collection = get_collection_usuarios_empresa_fatos(db=db)
+
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('IDFATO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('PROTOCOLO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA_REF', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('ORIGEM', pymongo.ASCENDING), ('DATA_ENV', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+
+        # collection_empresa = get_collection_empresa(db=db)
+        # rows = collection_empresa.find({'CATEGORIA': {'$in': ['ACAO', 'FII', 'ETF', 'BDR', 'CRIPTO']}, 'SITUACAOATIVO': {'$in': ['A', 'E']}})
+        # rows = collection_empresa.find({'SITUACAOATIVO': {'$in': ['A', 'E']}}).sort('CODIGO', 1)
+        # rows = collection_empresa.find({'CATEGORIA': {'$in': ['ETF']}, 'SITUACAOATIVO': {'$in': ['A', 'E']}})
+        # total = rows.count()
+        # logger.warning(f'{total=}')
+        # for idx, row in enumerate(rows):
+        #     # if idx == 0 or idx == total - 1: 
+        #     # logger.warning(f'{idx+1}/{total} - {row}')
+        #     logger.warning(f'{idx+1}/{total} - {row["CATEGORIA"]} - {row["CODIGO"]} - {row["IDATIVO"]} - {row["NOMERESUMIDO"]}')
+
+        # collection_empresa_fatos = get_collection_empresa_fatos(db=db)
+        # result = collection_empresa_fatos.count_documents({"CATEGORIA": 'ACAO'}).explain() # executionStats
+        # result = collection_empresa_fatos.find({'CATEGORIA': 'ACAO'}).skip(1).limit(100).sort('DATA_ENV', -1)  # .explain("executionStats") # .explain()
+        # logger.warning(f'{result=}')  
+        # for row in result:
+        #     logger.warning(f'{row=}')
+        #     break
+
+        # collection = db.teste
+        # collection.delete_many({})
+        # lista = [
+        #     {'ID': 1, 'VLRPRECOFECHAMENTO': Decimal128(str(float(10.0))), 'VLRPRECOANTERIOR': Decimal128(str(float(15.0))), 'VLRVARIACAO': Decimal128(str(float(1.5)))},
+        #     {'ID': 2, 'VLRPRECOFECHAMENTO': Decimal128(str(float(20.0))), 'VLRPRECOANTERIOR': Decimal128(str(float(25.0))), 'VLRVARIACAO': Decimal128(str(float(2.5)))},
+        # ]
+        # collection.insert_many(lista)
+        # # collection.update_many({}, {'$set': {'VLRPRECOANTERIOR': '$VLRPRECOFECHAMENTO', 'VLRVARIACAO': Decimal128(str(float(0.0)))}})
+        # # collection.update_many({},[{'$set': {"VLRPRECOANTERIOR": "$VLRPRECOFECHAMENTO", 'VLRVARIACAO': Decimal128(str(float(0.0)))}}], {'multi': 'true'})
+        # collection.update_many({}, [{'$set': {"VLRPRECOANTERIOR": "$VLRPRECOFECHAMENTO", 'VLRVARIACAO': Decimal128(str(float(0.0))), "DATAHORAALTERACO": ""}}])
+        # result = collection.find({})
+        # for row in result:
+        #     logger.warning(f'{row=}')
+
+
+        # collection_empresa               = get_collection_empresa(db=db)
+        # collection_usuario               = get_collection_usuarios(db=db)
+        # collection_usuario_empresa_fatos = get_collection_usuarios_empresa_fatos(db=db)
+        # collection_empresa_fatos         = get_collection_empresa_fatos(db=db)
+
+        # # if collection_usuario_empresa_fatos.count_documents({}) <= 0: logger.warning(f'DELETANDO TUDO')
+        # collection_usuario_empresa_fatos.delete_many({})
+        # # lista = [ {'IDUSUARIO': 1, 'CATEGORIA': 'ACAO', 'IDFATO': 10, 'DATA_REF': '20220501', 'PROTOCOLO': 100}, {'IDUSUARIO': 2, 'CATEGORIA': 'ACAO', 'IDFATO': 20, 'DATA_REF': '20220502', 'PROTOCOLO': 200}, ]
+        # # collection_usuario_empresa_fatos.insert_many(lista)
+
+        # listar usuario com ativos na carteira ou no radar
+        # users = collection_usuario.find({'ID': 2}).sort('ID', 1)
+        # total = users.count()
+        # data_ini_mes = '20220501'
+        # logger.warning(f'{data_ini_mes=}')
+        # for idx, user in enumerate(users):
+        #     id_usuario = int(user["ID"])
+        #     logger.warning(f'{idx+1}/{total} - {user["_id"]} - {user["ID"]} - {user["NOME"]} - {user["EMAIL"]}')
+        #     #    buscar lista de ativos da carteira ou do radar
+        #     companies = collection_empresa.find({'CATEGORIA': 'ACAO', 'CODIGO': {'$in': ['ITSA4', 'FESA4', 'GFSA3']}})
+        #     empresas = [int(empresa['IDEMPRESA']) for empresa in companies if empresa['IDEMPRESA']]
+        #     logger.warning(f'{empresas=}')
+        #     #    buscar o maior protocolo do usuario
+        #     user_fato = collection_usuario_empresa_fatos.find_one(filter={'IDUSUARIO': id_usuario}, sort=[("PROTOCOLO", -1)], limit=1)  # max
+        #     protocolo = int(user_fato['PROTOCOLO']) if user_fato else 0
+        #     logger.warning(f'{protocolo=}')
+        #     #    buscar todos os fatos relevantes do mes, para aqueles ativos, maior que o max protocolo usuario
+        #     facts = collection_empresa_fatos.find({'CATEGORIA': 'ACAO', 'IDEMPRESA': {'$in': empresas}, 'DATA_REF': {'$gte': data_ini_mes}, 'PROTOCOLO': {'$gt': protocolo}, 'SITUACAO': 'A'})
+        #     fatos = [{'IDUSUARIO': id_usuario, 'CATEGORIA': fato['CATEGORIA'], 'ORIGEM': fato['CATEGORIA'], 'IDFATO': fato['_id'], 'IDEMPRESA': int(fato['IDEMPRESA']), 'NMEMPRESA': fato['NMEMPRESA'], 'DATA_ENV': fato['DATA_ENV'], 'DATA_REF': fato['DATA_REF'], 'PROTOCOLO': int(fato['PROTOCOLO']), 'LINK': fato['LINK'], 'ASSUNTO': fato['ASSUNTO'], 'SITUACAO': 'P'}  for fato in facts] #P-Pendente
+        #     logger.warning(f'{fatos=}')
+        #     logger.warning(f'{len(fatos)=}')
+        #     if fatos: collection_usuario_empresa_fatos.insert_many(fatos)
+
+        # RESETAR DADOS USUARIO
+        # user_fato = collection_usuario_empresa_fatos.find_one(filter={'IDUSUARIO': 2}, sort=[("PROTOCOLO", -1)], limit=1)  # max
+        # protocolo = int(user_fato['PROTOCOLO']) if user_fato else 0
+        # logger.warning(f'{protocolo=}')
+        # collection_usuario_empresa_fatos.delete_many({"IDUSUARIO": 2, 'PROTOCOLO': {'$lt': protocolo}})  # $lt <
+        # collection_usuario_empresa_fatos.update_many({"IDUSUARIO": 2}, {"$set": {"SITUACAO": 'L'}})  # L-Lido
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

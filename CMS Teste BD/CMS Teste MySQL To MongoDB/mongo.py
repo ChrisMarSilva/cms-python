@@ -131,41 +131,41 @@ def get_collection_usuarios_cei_prov(db: pymongo.database.Database) -> pymongo.c
     collection = db.usuarios_cei_prov
     return collection
 
-def get_collection_empresa_setor(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_setor
+def get_collection_usuarios_empresa_fatos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_empresa_fatos
     return collection
 
-def get_collection_empresa_subsetor(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_subsetor
+def get_collection_empresa_admin(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_admin
     return collection
 
-def get_collection_empresa_segmento(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_segmento
+def get_collection_empresa_setores(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_setores
     return collection
 
 def get_collection_empresa(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa
     return collection
 
-def get_collection_empresa_acao(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_acao
-    return collection
+# def get_collection_empresa_acao(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_acao
+#     return collection
 
-def get_collection_empresa_fii(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_fii
-    return collection
+# def get_collection_empresa_fii(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_fii
+#     return collection
 
-def get_collection_empresa_etf(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_etf
-    return collection
+# def get_collection_empresa_etf(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_etf
+#     return collection
 
-def get_collection_empresa_bdr(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_bdr
-    return collection
+# def get_collection_empresa_bdr(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_bdr
+#     return collection
 
-def get_collection_empresa_cripto(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_cripto
-    return collection
+# def get_collection_empresa_cripto(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_cripto
+#     return collection
 
 def get_collection_empresa_finan(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_finan
@@ -209,6 +209,14 @@ def get_collection_empresa_finan_dre_ano(db: pymongo.database.Database) -> pymon
 
 def get_collection_empresa_cotacoes(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_cotacoes
+    return collection
+
+def get_collection_empresa_fatos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_fatos
+    return collection
+
+def get_collection_empresa_fatos_lidos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_fatos_lidos
     return collection
 
 def get_collection_admin_log_erros(db: pymongo.database.Database) -> pymongo.collection.Collection: 
