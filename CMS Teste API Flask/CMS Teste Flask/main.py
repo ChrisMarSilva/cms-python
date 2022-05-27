@@ -1,8 +1,9 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, send_from_directory
 from flask_cors import CORS
 # from flaskext.mysql import MySQL #pip install flask-mysql
 # import pymysql
 from random import sample
+import os
 from os import getpid
 import json
 
@@ -12,6 +13,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 # app.config.from_object(__name__)
 CORS(app=app, resources={r'/*': {'origins': '*'}})
 
+
 # mysql = MySQL()
 # app.config['MYSQL_DATABASE_USER'] = 'root'
 # app.config['MYSQL_DATABASE_PASSWORD'] = ''
@@ -19,6 +21,8 @@ CORS(app=app, resources={r'/*': {'origins': '*'}})
 # app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 # mysql.init_app(app)
 
+DIRETORIO = '\output'
+# DIRETORIO = '/output'
 DEBUG = True
 MEMBERS = [{'id': '1', 'firstname': 'cairocoders', 'lastname': 'Ednalan', 'address': 'Olongapo city'}, {'id': '2', 'firstname': 'clydey', 'lastname': 'Ednalan', 'address': 'Angles city'}]
 
@@ -154,6 +158,42 @@ def delete(id):
     response_object = {'status': 'success'}
     response_object['message'] = "Successfully Deleted"
     return jsonify(response_object)
+
+
+@app.route("/arquivos", methods=["POST"])
+def post_arquivo():
+    arquivo = request.files.get("meuArquivo")
+    nome_do_arquivo = arquivo.filename
+    path = os.path.abspath(__file__)
+    path = os.path.dirname(path)
+    # path = os.path.join(path, DIRETORIO) # esta dando erro # c:\output
+    path = path + "\\output"
+    path = os.path.join(path, nome_do_arquivo)
+    arquivo.save(path)
+    return '', 201
+
+
+@app.route("/arquivos", methods=["GET"])
+def lista_arquivos():
+    arquivos = []
+    path = os.path.abspath(__file__)
+    path = os.path.dirname(path)
+    # path = os.path.join(path, DIRETORIO)  # esta dando erro # c:\output
+    path = path + "\\output"
+    for nome_do_arquivo in os.listdir(path):
+        endereco_do_arquivo = os.path.join(path, nome_do_arquivo)
+        if(os.path.isfile(endereco_do_arquivo)):
+            arquivos.append(nome_do_arquivo)
+    return jsonify(arquivos)
+
+
+@app.route("/arquivos/<nome_do_arquivo>",  methods=["GET"])
+def get_arquivo(nome_do_arquivo):
+    path = os.path.abspath(__file__)
+    path = os.path.dirname(path)
+    # path = os.path.join(path, DIRETORIO) # esta dando erro # c:\output
+    path = path + "\\output"
+    return send_from_directory(path, nome_do_arquivo, as_attachment=True)
 
 
 if __name__ == '__main__':

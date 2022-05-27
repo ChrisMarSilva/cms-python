@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-Br">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flask</title>
 </head>
+
 <body>
 
     <br>
@@ -17,6 +19,12 @@
 
     <button id="btn1">Btn 1</button>
     <button id="btn2">Btn 2</button>
+
+    <form action="/arquivos" method="POST" enctype="multipart/form-data">
+        <label for="meuArquivo">Upload Arquivo</label><br>
+        <input type="file" id="meuArquivo" name="meuArquivo"><br>
+        <input type="submit" value="Submit">
+    </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
