@@ -997,15 +997,22 @@ def migrar_empresa_fatos_ajustar_protocolo(mongo_uri: str, mysql_host: str, mysq
         collection_empresa_fatos = get_collection_empresa_fatos(db=db)
 
         fatos = collection_empresa_fatos.find({}) 
-        
-        total = fatos.count()
-        logger.warning(f'{total=}')
 
-        for fato in fatos:
+        total = fatos.count()
+        logger.info(f'{total=}')
+
+        params = []
+
+        for idx, fato in enumerate(fatos):
             try:
-                collection_empresa_fatos.update_many({"_id": ObjectId(fato['_id'])}, {"$set": {"PROTOCOLO": int(fato['PROTOCOLO'])}})
+                if idx == 0 or (idx%1_000) == 0: logger.info(f'{idx+1}/{total}')
+                # collection_empresa_fatos.update_many({"_id": ObjectId(fato['_id'])}, {"$set": {"PROTOCOLO": int(fato['PROTOCOLO'])}})
+                params.append(UpdateOne({"_id": ObjectId(fato['_id'])}, {'$set': {"PROTOCOLO": int(fato['PROTOCOLO'])}}))
             except Exception as e:
                 logger.error(f'Falha Geral: "{str(e)}"')
+
+        logger.info(f'{len(params)=}')
+        if len(params) > 0: collection_empresa_fatos.empresa.bulk_write(params)
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
