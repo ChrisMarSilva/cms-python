@@ -135,6 +135,10 @@ def get_collection_usuarios_empresa_fatos(db: pymongo.database.Database) -> pymo
     collection = db.usuarios_empresa_fatos
     return collection
 
+def get_collection_usuarios_empresa_proventos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_empresa_proventos
+    return collection
+
 def get_collection_empresa_admin(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_admin
     return collection
@@ -215,8 +219,12 @@ def get_collection_empresa_fatos(db: pymongo.database.Database) -> pymongo.colle
     collection = db.empresa_fatos
     return collection
 
-def get_collection_empresa_fatos_lidos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
-    collection = db.empresa_fatos_lidos
+# def get_collection_empresa_fatos_lidos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+#     collection = db.empresa_fatos_lidos
+#     return collection
+
+def get_collection_empresa_proventos(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.empresa_proventos
     return collection
 
 def get_collection_admin_log_erros(db: pymongo.database.Database) -> pymongo.collection.Collection: 

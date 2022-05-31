@@ -936,7 +936,6 @@ def migrar_usuario_cei_ajustar_id(mongo_uri: str, mysql_host: str, mysql_user: s
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
-        
 
 
 def migrar_usuario_empresa_fatos(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
@@ -1030,6 +1029,41 @@ def migrar_usuario_empresa_fatos(mongo_uri: str, mysql_host: str, mysql_user: st
         # logger.warning(f'{protocolo=}')
         # collection_usuario_empresa_fatos.delete_many({"IDUSUARIO": 2, 'PROTOCOLO': {'$lt': protocolo}})  # $lt <
         # collection_usuario_empresa_fatos.update_many({"IDUSUARIO": 2}, {"$set": {"SITUACAO": 'L'}})  # L-Lido
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
+def migrar_usuario_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db = get_database(client=client)
+
+        collection = get_collection_usuarios_empresa_proventos(db=db)
+        collection.delete_many({})
+
+        # TBEMPRESA_PROVENTO_ATIVO       - IDEMPRPROV, IDUSUARIO, IDATIVO, TIPO, DATAEX
+        # TBFII_FUNDOIMOB_PROVENTO_ATIVO - IDEMPRPROV, IDUSUARIO, IDFUNDO, TIPO, DATAEX
+        # TBBDR_EMPRESA_PROVENTO_ATIVO   - IDBDRPROV,  IDUSUARIO, IDBDR,   TIPO, DATAEX
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT xxxxxxx FROM xxxxxxxx ORDER BY xxxxxxxxx")
+                result = cursor.fetchall()
+                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        # if lista:
+        #     collection.create_index('xxxxxxxxx')
+        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
+        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

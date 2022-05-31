@@ -25,11 +25,6 @@ def main():
         # mysql_host, mysql_user, mysql_password, mysql_database, mongo_uri = settings.MYSQL_HOST_DIGITAL_OCEAN, settings.MYSQL_USER_DIGITAL_OCEAN, settings.MYSQL_PASS_DIGITAL_OCEAN, settings.MYSQL_DB_DIGITAL_OCEAN, settings.MONGODB_URI_DIGITAL_OCEAN
         # logger.info(f'{mysql_host} - {mysql_user} - {mysql_password} - {mysql_database} - {mongo_uri}')
 
-        # outros    
-        # migrar_noticia(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        # migrar_admin_log_erros(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        # migrar_admin_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-
         # usuario        
         # migrar_usuario(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_config(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -51,7 +46,8 @@ def main():
         # migrar_usuario_cei(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_cei_oper(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_cei_prov(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        # migrar_usuario_cei_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)        
+        # migrar_usuario_cei_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)     
+        # migrar_usuario_empresa_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)   
 
         # empresa
         # migrar_empresa_finan(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -69,12 +65,13 @@ def main():
         # migrar_empresa_admin(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_setores(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-
-        # fatos
         # migrar_empresa_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_empresa_fatos_ajustar_protocolo(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        # migrar_usuario_empresa_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
 
+        # outros    
+        # migrar_noticia(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_admin_log_erros(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_admin_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
@@ -83,6 +80,10 @@ def main():
 
         mysql_host, mysql_user, mysql_password, mysql_database, mongo_uri = settings.MYSQL_HOST, settings.MYSQL_USER, settings.MYSQL_PASS, settings.MYSQL_DB, settings.MONGODB_URI
         logger.info(f'{mysql_host} - {mysql_user} - {mysql_password} - {mysql_database} - {mongo_uri}')
+
+        # migrar_empresa_proventos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_empresa_proventos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
@@ -99,6 +100,17 @@ def main():
         # tipo_usuario  = 'A'   # I-Investidor  # A-Administrador
         # id_comentario = 784  # 784 # 796 # 800
         # import uuid # uuid.uuid1()  # uuid.uuid4()  # uuid.uuid4().hex  # uuid.uuid4()  # UUID = uuid.uuid1()  UUID.int
+
+        collection_empresa_proventos          = get_collection_empresa_proventos(db=db)
+        collection_usuarios_empresa_proventos = get_collection_usuarios_empresa_proventos(db=db)
+
+        rows = collection_empresa_proventos.find({})
+
+        for idx, row in enumerate(rows):
+            # logger.warning(f'{idx+1} - {row}')
+            logger.warning(f'{idx+1} - {row["CATEGORIA"]} - {row["CODIGO"]} - {row["CODISIN"]} - {row["NMEMPRESA"]} - {row["DATAEX"]} - {row["DATAPAGTO"]} - {row["VLRPRECO"]}')
+            break
+
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
