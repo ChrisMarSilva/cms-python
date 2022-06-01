@@ -1063,10 +1063,20 @@ def migrar_usuario_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user
                 rows = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
 
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index('CATEGORIA')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDPROVENTO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+
         collection_empresa_proventos = get_collection_empresa_proventos(db=db)
 
         lista = []
-        for row in rows:
+        for idx, row in enumerate(rows):
+            if idx == 0 or (idx%50) == 0: logger.info(f'{idx+1}/{len(result)}')
             prov = collection_empresa_proventos.find_one({'CATEGORIA': row['CATEGORIA'], 'IDPROVENTO': row['IDPROVENTO']})
             if not prov: 
                 logger.error(f"NÃO LOCALIZADO - {row['CATEGORIA']=} - {row['IDPROVENTO']=}")
@@ -1077,15 +1087,6 @@ def migrar_usuario_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user
         if lista: collection.insert_many(lista)
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
-
-        # if lista:
-        collection.create_index('IDUSUARIO')
-        collection.create_index('CATEGORIA')
-        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
-        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDPROVENTO', pymongo.ASCENDING)])
-        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
-        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
