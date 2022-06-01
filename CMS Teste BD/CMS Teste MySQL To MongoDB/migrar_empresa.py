@@ -1032,11 +1032,11 @@ def migrar_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user: str, m
             with connection.cursor() as cursor:
 
                 query = """
-                    SELECT 'ACAO' AS CATEGORIA, A.ID AS IDATIVO, A.CODIGO, P.ID AS IDPROVENTO, P.IDEMPRESA, E.NOMRESUMIDO AS NMEMPRESA, P.TIPO, P.CATEGORIA AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBEMPRESA_PROVENTO P JOIN TBEMPRESA E ON ( E.ID = P.IDEMPRESA ) JOIN TBEMPRESA_ATIVO A ON ( A.IDEMPRESA = P.IDEMPRESA AND A.CODISIN = P.CODISIN )
+                    SELECT 'ACAO' AS CATEGORIA, A.ID AS IDATIVO, A.CODIGO, P.ID AS IDPROVENTO, P.IDEMPRESA AS IDEMPRESA, E.NOMRESUMIDO AS NMEMPRESA, P.TIPO, P.CATEGORIA                AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBEMPRESA_PROVENTO P JOIN TBEMPRESA E ON ( E.ID = P.IDEMPRESA ) JOIN TBEMPRESA_ATIVO A ON ( A.IDEMPRESA = P.IDEMPRESA AND A.CODISIN = P.CODISIN )
                     UNION ALL
-                    SELECT 'FII' AS CATEGORIA, E.ID AS IDATIVO, E.CODIGO, P.ID AS IDPROVENTO, P.IDFUNDO AS IDEMPRESA, E.NOME AS NMEMPRESA, P.TIPO, P.CATEGORIA AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBFII_FUNDOIMOB_PROVENTO P JOIN TBFII_FUNDOIMOB E ON ( E.ID = P.IDFUNDO )
+                    SELECT 'FII'  AS CATEGORIA, E.ID AS IDATIVO, E.CODIGO, P.ID  AS IDPROVENTO, P.IDFUNDO   AS IDEMPRESA, E.NOME       AS NMEMPRESA, P.TIPO, P.CATEGORIA                AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBFII_FUNDOIMOB_PROVENTO P JOIN TBFII_FUNDOIMOB E ON ( E.ID = P.IDFUNDO )
                     UNION ALL
-                    SELECT 'BDR' AS CATEGORIA, E.ID AS IDATIVO, E.CODIGO, P.ID AS IDPROVENTO, P.IDBDR AS IDEMPRESA, E.NOME AS NMEMPRESA, P.TIPO, IFNULL(P.CATEGORIA, 'DRN') AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBBDR_EMPRESA_PROVENTO P   JOIN TBBDR_EMPRESA E ON ( E.ID = P.IDBDR AND E.CODISIN = P.CODISIN )
+                    SELECT 'BDR'  AS CATEGORIA, E.ID AS IDATIVO, E.CODIGO, P.ID  AS IDPROVENTO, P.IDBDR     AS IDEMPRESA, E.NOME       AS NMEMPRESA, P.TIPO, IFNULL(P.CATEGORIA, 'DRN') AS CATEG, P.CODISIN, P.DATAAPROV, P.DATACOM, P.DATAEX, P.DATAPAGTO, P.VLRPRECO, P.SITUACAO FROM TBBDR_EMPRESA_PROVENTO P   JOIN TBBDR_EMPRESA E ON ( E.ID = P.IDBDR AND E.CODISIN = P.CODISIN )
                     ORDER BY CATEGORIA, IDPROVENTO
                 """
                 cursor.execute(query)
@@ -1048,11 +1048,17 @@ def migrar_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user: str, m
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        #if lista:
+        # if lista:
         collection.create_index('CATEGORIA')
         collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDPROVENTO', pymongo.ASCENDING)])
         collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDEMPRESA', pymongo.ASCENDING)])
         collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

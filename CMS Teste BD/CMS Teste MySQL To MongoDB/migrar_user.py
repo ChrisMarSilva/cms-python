@@ -1043,27 +1043,49 @@ def migrar_usuario_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user
         collection = get_collection_usuarios_empresa_proventos(db=db)
         collection.delete_many({})
 
-        # TBEMPRESA_PROVENTO_ATIVO       - IDEMPRPROV, IDUSUARIO, IDATIVO, TIPO, DATAEX
-        # TBFII_FUNDOIMOB_PROVENTO_ATIVO - IDEMPRPROV, IDUSUARIO, IDFUNDO, TIPO, DATAEX
-        # TBBDR_EMPRESA_PROVENTO_ATIVO   - IDBDRPROV,  IDUSUARIO, IDBDR,   TIPO, DATAEX
-
         connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         with connection:
             with connection.cursor() as cursor:
 
-                cursor.execute("SELECT xxxxxxx FROM xxxxxxxx ORDER BY xxxxxxxxx")
+                query = """
+                    SELECT T.CATEGORIA, T.IDUSUARIO, T.IDATIVO, T.IDPROVENTO
+                    FROM ( 
+                        SELECT 'ACAO' AS CATEGORIA, PA.IDUSUARIO, PA.IDATIVO AS IDATIVO, PA.IDEMPRPROV AS IDPROVENTO FROM TBEMPRESA_PROVENTO_ATIVO PA
+                        UNION ALL
+                        SELECT 'FII'  AS CATEGORIA, PA.IDUSUARIO, PA.IDFUNDO AS IDATIVO, PA.IDEMPRPROV AS IDPROVENTO FROM TBFII_FUNDOIMOB_PROVENTO_ATIVO PA
+                        UNION ALL
+                        SELECT 'BDR'  AS CATEGORIA, PA.IDUSUARIO, PA.IDBDR   AS IDATIVO, PA.IDBDRPROV  AS IDPROVENTO FROM TBBDR_EMPRESA_PROVENTO_ATIVO PA
+                    )T
+                    ORDER BY T.IDUSUARIO, T.CATEGORIA, T.IDATIVO, T.IDPROVENTO
+                """
+                cursor.execute(query)
                 result = cursor.fetchall()
-                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
+                rows = [row for row in result] 
                 logger.info(f"Total MySQL = {len(result)}") 
+
+        collection_empresa_proventos = get_collection_empresa_proventos(db=db)
+
+        lista = []
+        for row in rows:
+            prov = collection_empresa_proventos.find_one({'CATEGORIA': row['CATEGORIA'], 'IDPROVENTO': row['IDPROVENTO']})
+            if not prov: 
+                logger.error(f"NÃO LOCALIZADO - {row['CATEGORIA']=} - {row['IDPROVENTO']=}")
+                continue
+            lista.append({'IDUSUARIO': int(row['IDUSUARIO']), "CATEGORIA": prov['CATEGORIA'], "IDATIVO": prov['IDATIVO'], "CODIGO": prov['CODIGO'], "IDPROVENTO": prov['_id'], "IDEMPRESA": prov['IDEMPRESA'], "NMEMPRESA": prov['NMEMPRESA'], "TIPO": prov['TIPO'], "CATEG": prov['CATEG'], "CODISIN": prov['CODISIN'], "DATAAPROV": prov['DATAAPROV'], "DATACOM": prov['DATACOM'], "DATAEX": prov['DATAEX'], "DATAPAGTO": prov['DATAPAGTO'], "VLRPRECO": prov['VLRPRECO'], "SITUACAO": 'L'})  # L-Lido
+            # break
 
         if lista: collection.insert_many(lista)
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
         # if lista:
-        #     collection.create_index('xxxxxxxxx')
-        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
-        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
+        collection.create_index('IDUSUARIO')
+        collection.create_index('CATEGORIA')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDPROVENTO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('DATAEX', pymongo.ASCENDING), ('DATAPAGTO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
