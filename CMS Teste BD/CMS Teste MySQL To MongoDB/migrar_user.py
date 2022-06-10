@@ -28,11 +28,11 @@ def migrar_usuario(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_passw
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('ID')
-            collection.create_index('EMAIL')
-            collection.create_index([('ID', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('ID', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('ID')
+        collection.create_index('EMAIL')
+        collection.create_index([('ID', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('ID', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
 
         # collection = get_collection_usuarios(db=db)
         # start_time = time.perf_counter()
@@ -145,9 +145,9 @@ def migrar_usuario_config(mongo_uri: str, mysql_host: str, mysql_user: str, mysq
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -175,10 +175,10 @@ def migrar_usuario_log(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_p
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -206,10 +206,10 @@ def migrar_usuario_apuracao(mongo_uri: str, mysql_host: str, mysql_user: str, my
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('ID')
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('MESANO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('ID')
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('MESANO', pymongo.ASCENDING)])
 
         # result = collection.find({'IDUSUARIO': 2}).sort("MESANO", 1).limit(1) #  SEELCT MIN(ANO_MES) FROM TABELA WHERE IDUSUARIO = 2 LIMIT 1
         # logger.warning(f"{result[0]}") 
@@ -244,10 +244,10 @@ def migrar_usuario_apuracao_calculada(mongo_uri: str, mysql_host: str, mysql_use
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('ID')
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('MESANO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('ID')
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING), ('MESANO', pymongo.ASCENDING)])
 
         # apurac = collection.find_one({"IDUSUARIO": 2, "TIPO": 'M', "CATEGORIA": 'C', "MESANO": f'202003'})
         # logger.warning(f"{apurac}") 
@@ -287,15 +287,15 @@ def migrar_usuario_comentario(mongo_uri: str, mysql_host: str, mysql_user: str, 
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('ID')
-            collection.create_index('IDPAI')
-            collection.create_index('DATAHORA')
-            collection.create_index([('ID', pymongo.ASCENDING), ('IDPAI', pymongo.ASCENDING)])
-            collection.create_index([('ID', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('IDPAI', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDPAI', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('ID')
+        collection.create_index('IDPAI')
+        collection.create_index('DATAHORA')
+        collection.create_index([('ID', pymongo.ASCENDING), ('IDPAI', pymongo.ASCENDING)])
+        collection.create_index([('ID', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDPAI', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDPAI', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
 
         # rows = collection.find(filter={"ID": int(id_comentario)})
         # for row in rows:
@@ -328,11 +328,11 @@ def migrar_usuario_comentario_reacao(mongo_uri: str, mysql_host: str, mysql_user
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDCOMENTARIO')
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING)])
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDCOMENTARIO')
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING)])
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
 
         # rows = db_mongo.db.usuarios_comentario_reacao.find(filter={"IDCOMENTARIO": int(id_comentario), "TIPO": 'A'})  # A-Gostei
         # rows = db_mongo.db.usuarios_comentario_reacao.find(filter={"IDCOMENTARIO": int(id_comentario), "TIPO": 'B'})  # B-NAO Gostei
@@ -381,10 +381,10 @@ def migrar_usuario_comentario_denuncia(mongo_uri: str, mysql_host: str, mysql_us
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDCOMENTARIO')
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDCOMENTARIO')
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -412,14 +412,14 @@ def migrar_usuario_comentario_alerta(mongo_uri: str, mysql_host: str, mysql_user
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDCOMENTARIO')
-            collection.create_index([('IDUSUARIOORIG', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIODSST', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIOORIG', pymongo.ASCENDING), ('IDUSUARIODSST', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIODSST', pymongo.ASCENDING)])
-            collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIOORIG', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDCOMENTARIO')
+        collection.create_index([('IDUSUARIOORIG', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIODSST', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIOORIG', pymongo.ASCENDING), ('IDUSUARIODSST', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIODSST', pymongo.ASCENDING)])
+        collection.create_index([('IDCOMENTARIO', pymongo.ASCENDING), ('TIPO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING), ('IDUSUARIOORIG', pymongo.ASCENDING)])
 
         # rows = collection.find(filter={"IDUSUARIODSST": int(id_usuario), "SITUACAO": 'P'}).sort("DTHR", -1).limit(5)  # P-Pendente
         # rows = db_mongo.db.usuarios_comentario_alerta.find(filter={"IDUSUARIODSST": int(id_usuario), "SITUACAO": 'P'}).sort("DTHR", -1).limit(5)  # P-Pendente
@@ -542,12 +542,12 @@ def migrar_usuario_nota_corretagem(mongo_uri: str, mysql_host: str, mysql_user: 
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING), ('IDCORRETORA', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('NMARQUIVO', pymongo.ASCENDING)])
-            collection.create_index('SITUACAO')
-            collection.create_index([('_id', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DTIMPORTACAO', pymongo.ASCENDING), ('IDCORRETORA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('NMARQUIVO', pymongo.ASCENDING)])
+        collection.create_index('SITUACAO')
+        collection.create_index([('_id', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
 
 
         # collection_nota_corretagem      = get_collection_usuarios_nota_corretagem(db=db)
@@ -611,9 +611,9 @@ def migrar_usuario_nota_corretagem_data(mongo_uri: str, mysql_host: str, mysql_u
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDNOTACORRETAGEM')
-            collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDNOTACORRETAGEM')
+        collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -641,9 +641,9 @@ def migrar_usuario_nota_corretagem_oper(mongo_uri: str, mysql_host: str, mysql_u
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDNOTACORRETAGEM')
-            collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDNOTACORRETAGEM')
+        collection.create_index([('IDNOTACORRETAGEM', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -704,11 +704,11 @@ def migrar_usuario_carteira_projecao(mongo_uri: str, mysql_host: str, mysql_user
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DESCRICAO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DESCRICAO', pymongo.ASCENDING), ('SITUACAO', pymongo.ASCENDING)])
 
         # collection_carteira_projecao      = get_collection_usuarios_carteira_projecao(db=db)
         # collection_carteira_projecao_item = get_collection_usuarios_carteira_projecao_item(db=db)
@@ -752,9 +752,9 @@ def migrar_usuario_carteira_projecao_item(mongo_uri: str, mysql_host: str, mysql
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDPROJECAO')
-            collection.create_index([('IDPROJECAO', pymongo.ASCENDING), ('NUMERO', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDPROJECAO')
+        collection.create_index([('IDPROJECAO', pymongo.ASCENDING), ('NUMERO', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -812,8 +812,8 @@ def migrar_usuario_cei(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_p
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
+        # if lista:
+        collection.create_index('IDUSUARIO')
 
         # collection_cei      = get_collection_usuarios_cei(db=db)
         # collection_cei_oper = get_collection_usuarios_cei_oper(db=db)
@@ -865,13 +865,13 @@ def migrar_usuario_cei_oper(mongo_uri: str, mysql_host: str, mysql_user: str, my
 
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
-        if lista:
-            collection.create_index('IDUSUARIO')
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
-            collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
-            collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+        collection.create_index([('_id', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('DATA', pymongo.ASCENDING), ('CODIGO', pymongo.ASCENDING), ('CATEGORIA', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')
@@ -1092,11 +1092,43 @@ def migrar_usuario_empresa_proventos(mongo_uri: str, mysql_host: str, mysql_user
         logger.error(f'Falha Geral: "{str(e)}"')
 
 
+def migrar_usuario_aluguel(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
+    try:
+
+        client = get_client(mongo_uri=mongo_uri)
+        db     = get_database(client=client)
+
+        collection = get_collection_usuarios_aluguel(db=db)
+        collection.delete_many({})
+
+        connection = get_connection_mysql(mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        with connection:
+            with connection.cursor() as cursor:
+
+                cursor.execute("SELECT 'ACAO' AS CATEGORIA, ID, IDUSUARIO, IDATIVO, DATA, VLRBRUTO, VLRIR, VLRLIQUIDO, SITUACAO FROM TBALUGUEL_ATIVO ORDER BY ID")
+                result = cursor.fetchall()
+                lista = [convert_decimal(row) for row in result]  # lista = [row for row in result] 
+                logger.info(f"Total MySQL = {len(result)}") 
+
+        if lista: collection.insert_many(lista)
+
+        logger.info(f"Total MondoDB = {collection.count_documents({})}")
+
+        # if lista:
+        collection.create_index('IDUSUARIO')
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING)])
+        collection.create_index([('CATEGORIA', pymongo.ASCENDING), ('IDUSUARIO', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+        collection.create_index([('IDUSUARIO', pymongo.ASCENDING), ('IDATIVO', pymongo.ASCENDING)])
+
+    except Exception as e:
+        logger.error(f'Falha Geral: "{str(e)}"')
+
+
 def migrar_usuario_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, mysql_password: str, mysql_database: str):
     try:
 
         client = get_client(mongo_uri=mongo_uri)
-        db = get_database(client=client)
+        db     = get_database(client=client)
 
         collection = get_collection_xxxxxxxx(db=db)
         collection.delete_many({})
@@ -1115,9 +1147,9 @@ def migrar_usuario_xxxxxxxx(mongo_uri: str, mysql_host: str, mysql_user: str, my
         logger.info(f"Total MondoDB = {collection.count_documents({})}")
 
         # if lista:
-        #     collection.create_index('xxxxxxxxx')
-        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
-        #     collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
+        collection.create_index('xxxxxxxxx')
+        collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
+        collection.create_index([('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING), ('xxxxxxxxx', pymongo.ASCENDING)])
 
     except Exception as e:
         logger.error(f'Falha Geral: "{str(e)}"')

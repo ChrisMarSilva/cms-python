@@ -139,6 +139,10 @@ def get_collection_usuarios_empresa_proventos(db: pymongo.database.Database) -> 
     collection = db.usuarios_empresa_proventos
     return collection
 
+def get_collection_usuarios_aluguel(db: pymongo.database.Database) -> pymongo.collection.Collection: 
+    collection = db.usuarios_aluguel
+    return collection
+
 def get_collection_empresa_admin(db: pymongo.database.Database) -> pymongo.collection.Collection: 
     collection = db.empresa_admin
     return collection

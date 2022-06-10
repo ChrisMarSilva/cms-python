@@ -46,9 +46,9 @@ def main():
         # migrar_usuario_cei(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_cei_oper(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
         # migrar_usuario_cei_prov(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
-        # migrar_usuario_cei_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)     
-        # migrar_usuario_empresa_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)  
-        # migrar_usuario_empresa_proventos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database) 
+        # migrar_usuario_cei_ajustar_id(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_empresa_fatos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+        # migrar_usuario_empresa_proventos(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
 
         # empresa
         # migrar_empresa_finan(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
@@ -83,6 +83,8 @@ def main():
         mysql_host, mysql_user, mysql_password, mysql_database, mongo_uri = settings.MYSQL_HOST, settings.MYSQL_USER, settings.MYSQL_PASS, settings.MYSQL_DB, settings.MONGODB_URI
         logger.info(f'{mysql_host} - {mysql_user} - {mysql_password} - {mysql_database} - {mongo_uri}')
 
+        migrar_usuario_aluguel(mongo_uri=mongo_uri, mysql_host=mysql_host, mysql_user=mysql_user, mysql_password=mysql_password, mysql_database=mysql_database)
+
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------
 
@@ -98,6 +100,8 @@ def main():
         # tipo_usuario  = 'A'   # I-Investidor  # A-Administrador
         # id_comentario = 784  # 784 # 796 # 800
         # import uuid # uuid.uuid1()  # uuid.uuid4()  # uuid.uuid4().hex  # uuid.uuid4()  # UUID = uuid.uuid1()  UUID.int
+
+        collection = get_collection_usuarios_aluguel(db=db)
 
         # ----------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------

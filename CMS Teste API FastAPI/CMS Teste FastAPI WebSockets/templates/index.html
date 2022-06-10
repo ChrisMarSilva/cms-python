@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <title>FastAPI</title>
+</head>
+
+<body>
+
+    <h1>Teste WebSocket</h1>
+    <button id="btn1" disabled>AJAX!</button>
+    <button id="btn2">WebSocket!</button>
+    <br>
+    <div id="div1"> </div>
+
+    <div id="messages" style="overflow-y: scroll; height: 300px;"> </div>
+    <textarea cols="150" id="text" rows="5"></textarea>
+    <button id="send">Enviar!</button>
+
+    <!-- <h1>WebSocket Chat</h1>
+    <form action="" onsubmit="sendMessage(event)">
+        <input type="text" id="messageText" autocomplete="off" value="ok 1" />
+        <button>Send</button>
+    </form>
+    <ul id='messages'> </ul> 
+    -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/jquery-simple-websocket@1.1.4/dist/jquery.simple.websocket.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // var ws = new WebSocket("ws://127.0.0.1:5001/ws/push");
+
+            // ws.onmessage = function (event) {
+            //     var messages = document.getElementById('messages')
+            //     var message = document.createElement('li')
+            //     var content = document.createTextNode(event.data)
+            //     message.appendChild(content)
+            //     messages.appendChild(message)
+            // };
+
+            // function sendMessage(event) {
+            //     var input = document.getElementById("messageText")
+            //     ws.send(input.value)
+            //     input.value = ''
+            //     event.preventDefault()
+            // }
+
+            var nome = 'chris'
+
+            var socket = $.simpleWebSocket({
+                // url: 'ws://127.0.0.1:5001/ws/push',
+                url: `ws://127.0.0.1:5001/ws/duplex/${nome}`,
+                timeout: 20000,
+                attempts: 60,
+                // dataType: 'json' // optional (xml, json, text), default json
+                onOpen: function (event) {
+                    console.log('onOpen');
+                    console.log(event);
+                },
+                onClose: function (event) {
+                    console.log('onClose');
+                    console.log(event);
+                },
+                onError: function (event) {
+                    console.log('onError');
+                    console.log(event);
+                },
+            });
+
+            socket.connect();
+
+            // socket.isConnected(); // or: socket.isConnected(function(connected) {});
+
+            // socket.close();
+
+            // socket.onopen(function (message) {
+            //     console.log('onOpen');
+            //     console.log(event);
+            // });
+
+            socket.listen(function (message) {
+                // console.log(message, message.text);
+                // $("#div1").html(`<span>Message: "${message.text}"</span><br>` + $("#div1").html())
+                $("#messages").append(`<span>${message}</span><br>`)
+            });
+
+            // socket.onmessage = function (event) {
+            //     console.log('message3');
+            //     console.log(event.data);
+            // }
+
+            $("#btn2").click(function () {
+                // socket.send("Initialize");
+                socket.send({ 'text': 'hello' });
+                // socket.send({ 'text': 'hello' }).done(function () { console.log('ok'); }).fail(function (e) { console.log(e); });
+            });
+
+            $("#send").click(function () {
+                let texto = $("#text").val()
+                // console.log('send.texto: ', texto)
+                socket.send(`<b>${nome}</b> disse: ${texto}`)
+                $("#text").val('')
+            });
+
+            // $("#btn1").click(function () {
+            //     // get_dados()
+            // });
+
+            // get_dados()
+
+            // function get_dados() {
+            //     axios.get("/dados")
+            //         .then(res => {
+            //             // console.log(res, res.data, res.data.message)
+            //             const { message } = res.data;
+            //             // $("#div1").append("<span>Teste</span><br>")
+            //             $("#div1").append(`<span>Teste: "${message}"</span><br>`)
+            //             setTimeout(function () { get_dados(); }, 1000);
+            //         })
+            // }
+
+        })
+    </script>
+</body>
+
+</html>
