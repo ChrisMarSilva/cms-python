@@ -83,10 +83,12 @@ if __name__ == '__main__':
     main()
 
 # py -3 -m venv .venv
-# python -m pip install --upgrade xxxxxxx
-# python -m pip install --upgrade pip
 # cd c:/Users/chris/Desktop/CMS Python/xxxxxx
 # .venv\scripts\activate
+
+# python -m pip install --upgrade pip
+# python -m pip install --upgrade xxxxxxx
+
 # python main.py
 # python3 main.py  
 # pypy3 main.py
