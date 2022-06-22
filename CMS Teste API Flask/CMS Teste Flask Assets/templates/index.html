@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style1.css' ) }}" /> -->
+    <!-- <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style2.css' ) }}" /> -->
+    {% assets "css_all" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" type="text/css" />
+    {% endassets %}
+    <title>Flask Assets</title>
+</head>
+
+<body>
+    <h1>Teste 1 - This should be red.</h1>
+    <h2>Teste 2 - This should be blue</h2>
+    <!-- <script src="{{ url_for('static', filename='main.js' ) }}"></script> -->
+    {% assets "js_all" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+    {% assets filters="jsmin", output="packed.js", "main.js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+</body>
+
+</html>
