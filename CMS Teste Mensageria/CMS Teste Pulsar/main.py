@@ -1,6 +1,5 @@
 from loguru import logger
 import time
-from dotenv import load_dotenv
 
 
 def main():
@@ -14,8 +13,6 @@ def main():
         end_time = time.perf_counter() - start_time  # time.time() # time.perf_counter() # time.perf_counter_ns() # time.process_time()
         logger.info(f"Done in {end_time:.2f}s")
 
-    except KeyboardInterrupt:
-        pass
     except Exception as e:
         logger.error(f'Falha Geral(main): "{str(e)}"')
 
@@ -23,10 +20,9 @@ def main():
 if __name__ == '__main__':
     main()
 
-# py -3 -m venv .venv
-# python -m pip install --upgrade xxxxxxx
-# cd c:/Users/chris/Desktop/CMS Python/xxxxxx
-# .venv\scripts\activate
+# python -m pip install --upgrade pulsar-client
+# python -m pip install --upgrade pulsar-client==2.10.0
+#  No matching distribution found for pulsar-client[all]==2.10.0
+
 # python main.py
-# python3 main.py  
-# pypy3 main.py
+
