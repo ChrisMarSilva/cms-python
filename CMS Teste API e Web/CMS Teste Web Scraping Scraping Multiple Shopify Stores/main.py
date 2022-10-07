@@ -1,5 +1,6 @@
 import asyncio
 import datetime as dt
+import pathlib
 import time
 
 import httpx
@@ -13,13 +14,25 @@ async def fetch_store(client, url):
 
 
 async def teste_01():
-    with open("stores.txt", "r") as f:
+
+    # file = (
+    #     pathlib.Path()
+    #     .absolute()
+    #     # pathlib.Path.cwd()
+    #     .joinpath("CMS Teste API e Web")
+    #     .joinpath("CMS Teste Web Scraping Scraping Multiple Shopify Stores")
+    #     .joinpath("stores.txt")
+    # )
+    file = pathlib.Path(__file__).parent.joinpath("stores.txt")
+    with open(file, "r") as f:
         urls = [line.strip() for line in f.readlines()]
+
     async with httpx.AsyncClient() as client:
         tasks = []
         for url in urls:
-            tasks.append(asyncio.create_task(fetch_store(client, url)))
+            tasks.append(asyncio.create_task(fetch_store(client=client, url=url)))
         results = await asyncio.gather(*tasks)
+
     return results
 
 
