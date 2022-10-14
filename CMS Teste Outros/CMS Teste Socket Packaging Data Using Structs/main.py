@@ -72,7 +72,7 @@ if __name__ == "__main__":
 # python -m pip install --upgrade pip
 # python -m pip install --upgrade xxxx
 
-# cd "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Packaging Data Using Structs"
-# C:/Python310/python.exe "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Packaging Data Using Structs/main.py"
+# cd "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Socket Packaging Data Using Structs"
+# C:/Python310/python.exe "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Socket Packaging Data Using Structs/main.py"
 
 # python main.py

@@ -41,5 +41,5 @@ if __name__ == "__main__":
     main()
 
 
-# cd "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Packaginging Structs"
+# cd "c:/Users/chris/Desktop/CMS Python/CMS Teste Outros/CMS Teste Socket Packaging Data Using Structs"
 # python server.py
