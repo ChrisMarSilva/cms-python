@@ -10,14 +10,17 @@ def main():
             conn, addr = server.accept()
             print(f"Connected to {addr}")
 
-            data = conn.recv(1024)
-            if not data:
-                break
+            if conn:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                if len(str(data)) <= 0:
+                    break
 
-            print(data.decode("utf-8"))
+                print(data.decode("utf-8"))
 
-            data = "Got yout message! Thank you!"
-            conn.send(data.encode("utf-8"))
+                data = "Got yout message! Thank you!"
+                conn.send(data.encode("utf-8"))
 
 
 if __name__ == "__main__":
