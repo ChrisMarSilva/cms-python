@@ -78,6 +78,16 @@ def main():
 
         config_env()
 
+        logger.info("")
+        test = [1, 2, 3, 4, 2, 2, 3, 1, 4, 4, 4, 3, 1, 2, 2, 2]
+        logger.info(set(test))
+        logger.info(max(set(test)))
+        logger.info(max(set(test), key=test.count))
+
+        logger.info("")
+        x = 1
+        print(sys.getsizeof(x))
+
         # teste_01_xxx()
 
         # python main.py
@@ -100,7 +110,7 @@ if __name__ == "__main__":
 # .venv\scripts\activate
 
 # python -m pip install --upgrade pip
-# python -m pip install --upgrade xxxxxxx
+# python -m pip install --upgrade dotenv
 
 # python --version
 # Python 3.10.7
