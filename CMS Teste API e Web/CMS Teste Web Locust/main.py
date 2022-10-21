@@ -2,10 +2,13 @@ from locust import HttpUser, between, task
 
 
 class WebsiteUser(HttpUser):
-    wait_time = between(5, 15)
+    wait_time = between(1, 5)
 
     def on_start(self):
         # self.client.post("/login", {"username": "test_user", "password": ""})
+        pass
+
+    def on_stop(self):
         pass
 
     # @task
@@ -17,7 +20,7 @@ class WebsiteUser(HttpUser):
     # def about(self):
     #     self.client.get("/about/")
 
-    @task
+    @task(3)
     def ping(self):
         self.client.get("/ping/")
 
